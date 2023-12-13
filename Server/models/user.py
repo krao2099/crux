@@ -1,8 +1,15 @@
 class User:
-    def __init__(self, first_name, last_name, email):
-        self.first_name = first_name
-        self.last_name = last_name
+    def __init__(self, user_name, email, hash_pass):
+        self.set_user_name(user_name)
+        self.set_email(email)
+        self.set_hash_pass(hash_pass)
+        self.admin = False
+
+    def set_user_name(self, user_name):
+        self.user_name = user_name
+
+    def set_email(self, email):
         self.email = email
 
-    def set_first_name(self, first_name):
-        self.first_name = first_name
+    def set_hash_pass(self, hash_pass):
+        self.hash_pass = hash_pass
