@@ -1,7 +1,11 @@
--- init-script.sql
-CREATE DATABASE mydatabase;
-CREATE USER myuser WITH PASSWORD 'mypassword';
-ALTER ROLE myuser SET client_encoding TO 'utf8';
-ALTER ROLE myuser SET default_transaction_isolation TO 'read committed';
-ALTER ROLE myuser SET timezone TO 'UTC';
-GRANT ALL PRIVILEGES ON DATABASE mydatabase TO myuser;
+CREATE TABLE  Users (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(MAX) UNIQUE NOT NULL,
+  email VARCHAR(MAX) UNIQUE NOT NULL,
+  hash_password VARCHAR(MAX) NOT NULL,
+  admin_flag BIT
+);
+INSERT INTO Users(username, email, hash_password, admin_flag) VALUES ("admin", "admin@admin.com", "password", 1);
+CREATE VIEW Admins_View AS SELECT * FROM Users WHERE admin_flag = 1;
+CREATE VIEW Users_View AS SELECT * FROM Users WHERE admin_flag = 0;
+
