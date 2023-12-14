@@ -1,6 +1,6 @@
 class wall:
     
-    def __init__(self, name, c_area, coordinates, description, image, rating, user, avgHeight=0,maxHeight=0,published=False):
+    def __init__(self, name, c_area, coordinates, description, image, rating, user, boulder, avgHeight=0,maxHeight=0,published=False):
         self.set_name(name)
         self.set_c_area(c_area)
         self.set_coordinates(coordinates)
@@ -8,6 +8,7 @@ class wall:
         self.set_image(image)
         self.set_rating(rating)
         self.set_user(user)
+        self.set_boulder(boulder)
         self.set_avgHeight(avgHeight)
         self.set_maxHeight(maxHeight)
         self.set_published(published)
@@ -33,6 +34,9 @@ class wall:
 
     def set_user(self, user):
         self.user = user
+        
+    def set_boulder(self, boulder):
+        self.boulder = boulder
 
     def set_avgHeight(self, avgHeight):
         self.avgHeight = avgHeight
