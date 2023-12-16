@@ -1,6 +1,9 @@
-class c_area:
+from base import base
+
+class crag(base):
     
-    def __init__(self, name, state, coordinates, description, image, rating, user, published=False):
+    def __init__(self, id, date, name, state, coordinates, description, image, rating, user, published=False):
+        super().__init__(id,date)
         self.set_name(name)
         self.set_state(state)
         self.set_coordinates(coordinates)

@@ -1,6 +1,9 @@
-class route:
+from base import base
+
+class route(base):
     
-    def __init__(self, name, grade, rating, style, height, safety, image, FA, setter, wall):
+    def __init__(self, id, date, name, grade, rating, style, height, safety, image, FA, setter, wall, numBolts, pads, coordinates, danger, description):
+        super().__init__(id,date)
         self.set_name(name)
         self.set_grade(grade)
         self.set_rating(rating)
@@ -10,7 +13,12 @@ class route:
         self.set_image(image)
         self.set_FA(FA)
         self.set_setter(setter)
-        self.set_wall(wall)
+        self.set_wall(wall) #FK to walls
+        self.set_numBolts(numBolts)
+        self.set_pads(pads)
+        self.set_coordinates(coordinates)
+        self.set_danger(danger)
+        self.set_description(description)
 
     def set_name(self, name):
         self.name = name
@@ -41,3 +49,18 @@ class route:
 
     def set_wall(self, wall):
         self.wall = wall
+
+    def set_numBolts(self, numBolts):
+        self.numBolts = numBolts
+
+    def set_pads(self, pads):
+        self.pads = pads
+
+    def set_coordinates(self, coordinates):
+        self.coordinates = coordinates
+
+    def set_danger(self, danger):
+        self.danger = danger
+
+    def set_description(self, description):
+        self.description = description

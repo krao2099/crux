@@ -10,7 +10,7 @@ CREATE TABLE  Users (
 INSERT INTO Users(username, email, hash_password, admin_flag) VALUES ('admin', 'admin@admin.com', 'password', TRUE);
 CREATE VIEW Admins AS SELECT * FROM Users WHERE admin_flag = TRUE;
 
-CREATE TABLE ClimbingAreas (
+CREATE TABLE Crags (
     id SERIAL PRIMARY KEY,
     state VARCHAR(15),
     coordinates VARCHAR(50)[2],
@@ -22,14 +22,14 @@ CREATE TABLE ClimbingAreas (
 );
 
 --allow for easy returning of published vs unpublished areas
-CREATE VIEW PublishedClimbingAreas AS SELECT * FROM ClimbingAreas WHERE published = TRUE;
-CREATE VIEW UnpublishedClimbingAreas AS SELECT * FROM ClimbingAreas WHERE published = FALSE;
+CREATE VIEW PublishedCrags AS SELECT * FROM Crags WHERE published = TRUE;
+CREATE VIEW UnpublishedCrags AS SELECT * FROM Crags WHERE published = FALSE;
 
 --need to add a trigger to update avgheight and maxheight on insert to routes
 CREATE TABLE Walls (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
-    climbing_area_id INTEGER REFERENCES ClimbingAreas(id),
+    climbing_area_id INTEGER REFERENCES Crags(id),
     coordinates VARCHAR(50)[2],
     description VARCHAR(500),
     image_path VARCHAR(100),
@@ -61,9 +61,9 @@ CREATE TABLE Routes (
 );
 
 --historical tables will all have the same fields as the others, and a version number
-CREATE TABLE ClimbingAreasHistorical (
+CREATE TABLE CragsHistorical (
     id SERIAL PRIMARY KEY,
-    climbing_area_id INTEGER REFERENCES ClimbingAreas(id),
+    climbing_area_id INTEGER REFERENCES Crags(id),
     version_number INTEGER,
     state VARCHAR(15),
     coordinates VARCHAR(50)[2],
@@ -79,7 +79,7 @@ CREATE TABLE WallsHistorical (
     wall_id INTEGER REFERENCES Walls(id),
     version_number INTEGER,
     name VARCHAR(100),
-    climbing_area_id INTEGER REFERENCES ClimbingAreas(id),
+    climbing_area_id INTEGER REFERENCES Crags(id),
     coordinates VARCHAR(50)[2],
     description VARCHAR(500),
     image_path VARCHAR(100),
@@ -144,8 +144,8 @@ CREATE FUNCTION archive_climbing_area() RETURNS TRIGGER AS $$
     DECLARE
         version INTEGER;
     BEGIN
-        SELECT MAX(version_number) + 1 INTO version FROM ClimbingAreasHistorical WHERE climbing_area_id = OLD.id;
-        INSERT INTO ClimbingAreasHistorical (version_number,
+        SELECT MAX(version_number) + 1 INTO version FROM CragsHistorical WHERE climbing_area_id = OLD.id;
+        INSERT INTO CragsHistorical (version_number,
                                                 climbing_area_id,
                                                 state,
                                                 coordinates,
@@ -169,7 +169,7 @@ $$ LANGUAGE plpgsql;
 
 
 CREATE TRIGGER update_climbing_areas
-    AFTER UPDATE ON ClimbingAreas
+    AFTER UPDATE ON Crags
     FOR EACH ROW EXECUTE FUNCTION archive_climbing_area();
 
 CREATE FUNCTION archive_wall() RETURNS TRIGGER AS $$
