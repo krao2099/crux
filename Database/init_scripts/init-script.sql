@@ -1,10 +1,23 @@
 CREATE TABLE  Users (
     id SERIAL PRIMARY KEY,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(254) UNIQUE NOT NULL,
     hash_password VARCHAR(65534) NOT NULL,
-    admin_flag BOOLEAN
+    admin_flag BOOLEAN,
+    loginAttempts INTEGER DEFAULT 0,
+    ttl TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE PROCEDURE UpdateTTL(itemId INTEGER)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE Users
+    SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
+    WHERE id = itemId;
+END;
+$$;
 
 --create an admin user in the db for testing purposes
 INSERT INTO Users(username, email, hash_password, admin_flag) VALUES ('admin', 'admin@admin.com', 'password', TRUE);
