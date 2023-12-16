@@ -25,6 +25,7 @@ CREATE VIEW Admins AS SELECT * FROM Users WHERE admin_flag = TRUE;
 
 CREATE TABLE Crags (
     id SERIAL PRIMARY KEY,
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     state VARCHAR(15),
     coordinates VARCHAR(50)[2],
     description VARCHAR(500),
@@ -42,7 +43,7 @@ CREATE VIEW UnpublishedCrags AS SELECT * FROM Crags WHERE published = FALSE;
 CREATE TABLE Walls (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
-    climbing_area_id INTEGER REFERENCES Crags(id),
+    crag_id INTEGER REFERENCES Crags(id),
     coordinates VARCHAR(50)[2],
     description VARCHAR(500),
     image_path VARCHAR(100),
@@ -76,7 +77,8 @@ CREATE TABLE Routes (
 --historical tables will all have the same fields as the others, and a version number
 CREATE TABLE CragsHistorical (
     id SERIAL PRIMARY KEY,
-    climbing_area_id INTEGER REFERENCES Crags(id),
+    creation_date TIMESTAMP,
+    crag_id INTEGER REFERENCES Crags(id),
     version_number INTEGER,
     state VARCHAR(15),
     coordinates VARCHAR(50)[2],
@@ -92,7 +94,7 @@ CREATE TABLE WallsHistorical (
     wall_id INTEGER REFERENCES Walls(id),
     version_number INTEGER,
     name VARCHAR(100),
-    climbing_area_id INTEGER REFERENCES Crags(id),
+    crag_id INTEGER REFERENCES Crags(id),
     coordinates VARCHAR(50)[2],
     description VARCHAR(500),
     image_path VARCHAR(100),
@@ -157,9 +159,10 @@ CREATE FUNCTION archive_climbing_area() RETURNS TRIGGER AS $$
     DECLARE
         version INTEGER;
     BEGIN
-        SELECT MAX(version_number) + 1 INTO version FROM CragsHistorical WHERE climbing_area_id = OLD.id;
+        SELECT MAX(version_number) + 1 INTO version FROM CragsHistorical WHERE crag_id = OLD.id;
         INSERT INTO CragsHistorical (version_number,
-                                                climbing_area_id,
+                                                crag_id,
+                                                creation_date,
                                                 state,
                                                 coordinates,
                                                 description,
@@ -170,6 +173,8 @@ CREATE FUNCTION archive_climbing_area() RETURNS TRIGGER AS $$
                                             ) VALUES (
                                                 version,
                                                 OLD.id,
+                                                OLD.creation_date,
+                                                OLD.state,
                                                 OLD.coordinates,
                                                 OLD.description,
                                                 OLD.image_path,
@@ -193,7 +198,7 @@ CREATE FUNCTION archive_wall() RETURNS TRIGGER AS $$
         INSERT INTO WallsHistorical (version_number,
                                         wall_id,
                                         name,
-                                        climbing_area_id,
+                                        crag_id,
                                         coordinates,
                                         description,
                                         image_path ,
@@ -207,7 +212,7 @@ CREATE FUNCTION archive_wall() RETURNS TRIGGER AS $$
                                         version,
                                         OLD.id,
                                         OLD.name,
-                                        OLD.climbing_area_id,
+                                        OLD.crag_id,
                                         OLD.coordinates,
                                         OLD.description,
                                         OLD.image_path ,
