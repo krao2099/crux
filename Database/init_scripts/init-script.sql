@@ -9,36 +9,36 @@ CREATE TABLE  Users (
     ttl TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE PROCEDURE LoginAttempt(user VARCHAR(50), hash_password VARCHAR(65534))
-LANGUAGE plpgsql
-AS $$
-BEGIN
-    --if current time is greater than ttl, check password
-    IF CURRENT_TIMESTAMP > (SELECT ttl FROM Users WHERE username = user)
-        BEGIN
-        --if password is equal to hashpass, set login_attempts 0 and return true
-        IF hash_password == (SELECT hash_password FROM Users WHERE username = user)
-            BEGIN
-                UPDATE Users SET login_attempts = 0 WHERE username = user; 
-                RETURN SELECT 'True'
-            END
-        --else increment login_attempts
-        ELSE
-            BEGIN
-                UPDATE Users SET login_attempts = (SELECT login_attempts FROM Users WHERE username = user) + 1 WHERE username = user;
-            END
-        END
-    --if login_attempts > 10, update ttl
-    IF (SELECT login_attempts FROM Users WHERE username = user) >= 10
-        BEGIN
-                UPDATE Users
-                SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
-                WHERE id = itemId;
-        END
-    --return false
-    RETURN SELECT 'False'
-END;
-$$;
+-- CREATE PROCEDURE LoginAttempt(user VARCHAR(50), hash_password VARCHAR(65534))
+-- LANGUAGE plpgsql
+-- AS $$
+-- BEGIN
+--     --if current time is greater than ttl, check password
+--     IF CURRENT_TIMESTAMP > (SELECT ttl FROM Users WHERE username = user)
+--         BEGIN
+--         --if password is equal to hashpass, set login_attempts 0 and return true
+--         IF hash_password == (SELECT hash_password FROM Users WHERE username = user)
+--             BEGIN
+--                 UPDATE Users SET login_attempts = 0 WHERE username = user; 
+--                 RETURN SELECT 'True'
+--             END
+--         --else increment login_attempts
+--         ELSE
+--             BEGIN
+--                 UPDATE Users SET login_attempts = (SELECT login_attempts FROM Users WHERE username = user) + 1 WHERE username = user;
+--             END
+--         END
+--     --if login_attempts > 10, update ttl
+--     IF (SELECT login_attempts FROM Users WHERE username = user) >= 10
+--         BEGIN
+--                 UPDATE Users
+--                 SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
+--                 WHERE id = itemId;
+--         END
+--     --return false
+--     RETURN SELECT 'False'
+-- END;
+-- $$;
 
 --create an admin user in the db for testing purposes
 INSERT INTO Users(username, email, hash_password, admin_flag) VALUES ('admin', 'admin@admin.com', 'password', TRUE);
@@ -300,7 +300,7 @@ CREATE FUNCTION archive_route() RETURNS TRIGGER AS $$
                                         OLD.image_path,
                                         OLD.fa_id,
                                         OLD.setter_id,
-                                        OLD.wall_id
+                                        OLD.wall_id,
                                         OLD.name,
                                         OLD.coordinates
                                     );
