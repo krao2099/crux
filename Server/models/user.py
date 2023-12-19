@@ -22,7 +22,8 @@ class user(Base):
         url = URL.create(
             drivername="postgresql",
             username="postgres",
-            host="/tmp/postgresql/socket",
+            password="test1234"
+            host="localhost:5432",
             database="crux_db"
         )
         engine = create_engine(url)
