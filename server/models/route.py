@@ -1,4 +1,4 @@
-class route():
+class Route():
     
     def __init__(self, id, date, name, grade, rating, style, height, safety, image, FA, setter, wall, numBolts, pads, coordinates, danger, description, published=False):
         self.set_id(id)

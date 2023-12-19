@@ -1,4 +1,4 @@
-class crag():
+class Crag():
     
     def __init__(self, id, date, name, state, coordinates, description, image, rating, user, published=False):
         self.set_id(id)

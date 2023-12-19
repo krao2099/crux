@@ -1,4 +1,4 @@
-class wall():
+class Wall():
     
     def __init__(self, id, date, name, crag, coordinates, description, image, rating, user, boulder, directions, avgHeight=0,maxHeight=0,published=False):
         self.set_id(id)

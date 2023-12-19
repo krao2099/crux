@@ -1,6 +1,6 @@
 import psycopg2
 
-class user():
+class User():
     def db_connect(self):
         return psycopg2.connect(host="localhost",dbname="crux_db", user="postgres", password="test1234")
     

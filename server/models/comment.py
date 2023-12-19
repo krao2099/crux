@@ -1,4 +1,4 @@
-class comment():
+class Comment():
     
     def __init__(self, id, date, user, owner, text, beta):
         self.set_id(id)
