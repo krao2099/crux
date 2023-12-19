@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
-from models.user import user
-from models.crag import crag
+from models.user import User
+from models.crag import Crag
 import os
 
 app = Flask(__name__)
@@ -8,19 +8,22 @@ app = Flask(__name__)
 
 
 @app.route('/user', methods=['POST'])
-def create_user():
+async def create_user():
     data = request.json
-    new_user = user(
-        username=data.get('username', None),
-        email=data.get('email', None),
-        hash_password=data.get('hash_password', None))
+    new_user = User(
+        None,
+        None,
+        data.get('username', None),
+        data.get('email', None),
+        data.get('hash_password', None)
+    )
     new_user.create_user()
     return jsonify({'message': 'User created !'}), 200
 
 @app.route('/crag', methods=['POST'])
 def create_crag():
     data = request.json
-    new_crag = crag(
+    new_crag = Crag(
         name=data.get('name', None),
         state=data.get('state', None),
         coordinates=data.get('coordinates', None),
