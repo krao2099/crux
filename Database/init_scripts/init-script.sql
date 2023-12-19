@@ -25,6 +25,7 @@ CREATE VIEW Admins AS SELECT * FROM Users WHERE admin_flag = TRUE;
 
 CREATE TABLE Crags (
     id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     state VARCHAR(15),
     coordinates VARCHAR(50)[2],
@@ -52,7 +53,8 @@ CREATE TABLE Walls (
     avg_height FLOAT,
     max_height FLOAT,
     published BOOLEAN,
-    boulder BOOLEAN
+    boulder BOOLEAN,
+    directions VARCHAR(100)
 );
 
 --allow for easy returning of published vs unpublished walls
@@ -63,6 +65,8 @@ CREATE VIEW UnpublishedBoulders AS SELECT * FROM Walls WHERE published = FALSE A
 
 CREATE TABLE Routes (
     id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    coordinates VARCHAR(50)[2],
     grade VARCHAR(4),
     rating FLOAT,
     style VARCHAR(50),
@@ -71,12 +75,17 @@ CREATE TABLE Routes (
     image_path VARCHAR(100),
     fa_id INTEGER REFERENCES Users(id),
     setter_id INTEGER REFERENCES Users(id),
-    wall_id INTEGER REFERENCES Walls(id)
+    wall_id INTEGER REFERENCES Walls(id),
+    bolts INTEGER,
+    pads INTEGER,
+    danger INTEGER,
+    published BOOLEAN
 );
 
 --historical tables will all have the same fields as the others, and a version number
 CREATE TABLE CragsHistorical (
     id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
     creation_date TIMESTAMP,
     crag_id INTEGER REFERENCES Crags(id),
     version_number INTEGER,
@@ -110,6 +119,8 @@ CREATE TABLE RoutesHistorical(
     id SERIAL PRIMARY KEY,
     route_id INTEGER REFERENCES Routes(id),
     version_number INTEGER,
+    name VARCHAR(100),
+    coordinates VARCHAR(50)[2],
     grade VARCHAR(4),
     rating FLOAT,
     style VARCHAR(50),
@@ -118,7 +129,10 @@ CREATE TABLE RoutesHistorical(
     image_path VARCHAR(100),
     fa_id INTEGER REFERENCES Users(id),
     setter_id INTEGER REFERENCES Users(id),
-    wall_id INTEGER REFERENCES Walls(id)
+    wall_id INTEGER REFERENCES Walls(id),
+    bolts INTEGER,
+    pads INTEGER,
+    danger INTEGER
 );
 
 --users can make comments on routes, and save routes as completed or to-do
@@ -127,6 +141,7 @@ CREATE TABLE RouteComments(
     user_id INTEGER REFERENCES Users(id),
     route_id INTEGER REFERENCES Routes(id),
     comment VARCHAR(500),
+    beta BOOLEAN,
     date DATE
 );
 
@@ -169,7 +184,8 @@ CREATE FUNCTION archive_climbing_area() RETURNS TRIGGER AS $$
                                                 image_path,
                                                 rating,
                                                 user_id,
-                                                published
+                                                published,
+                                                name
                                             ) VALUES (
                                                 version,
                                                 OLD.id,
@@ -180,7 +196,8 @@ CREATE FUNCTION archive_climbing_area() RETURNS TRIGGER AS $$
                                                 OLD.image_path,
                                                 OLD.rating,
                                                 OLD.user_id,
-                                                OLD.published    
+                                                OLD.published,
+                                                OLD.name   
                                             );
     END;
 $$ LANGUAGE plpgsql;
@@ -207,7 +224,8 @@ CREATE FUNCTION archive_wall() RETURNS TRIGGER AS $$
                                         avg_height,
                                         max_height,
                                         published,
-                                        boulder
+                                        boulder,
+                                        directions
                                     ) VALUES (
                                         version,
                                         OLD.id,
@@ -221,7 +239,8 @@ CREATE FUNCTION archive_wall() RETURNS TRIGGER AS $$
                                         OLD.avg_height,
                                         OLD.max_height,
                                         OLD.published,
-                                        OLD.boulder  
+                                        OLD.boulder,
+                                        OLD.directions
                                     );
     END;
 $$ LANGUAGE plpgsql;
@@ -246,7 +265,9 @@ CREATE FUNCTION archive_route() RETURNS TRIGGER AS $$
                                         image_path,
                                         fa_id,
                                         setter_id,
-                                        wall_id
+                                        wall_id,
+                                        name,
+                                        coordinates
                                     ) VALUES (
                                         OLD.id,
                                         version,
@@ -258,7 +279,9 @@ CREATE FUNCTION archive_route() RETURNS TRIGGER AS $$
                                         OLD.image_path,
                                         OLD.fa_id,
                                         OLD.setter_id,
-                                        OLD.wall_id  
+                                        OLD.wall_id
+                                        OLD.name,
+                                        OLD.coordinates
                                     );
     END;
 $$ LANGUAGE plpgsql;
