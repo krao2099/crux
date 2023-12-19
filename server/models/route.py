@@ -1,6 +1,6 @@
 class Route():
     
-    def __init__(self, id, date, name, grade, rating, style, height, safety, image, FA, setter, wall, numBolts, pads, coordinates, danger, description, published=False):
+    def __init__(self, id, date, name, grade, rating, style, height, safety, image, FA, setter, wall, numBolts, pads, coordinates, danger, description):
         self.set_id(id)
         self.set_date(date)
         self.set_name(name)
@@ -18,7 +18,6 @@ class Route():
         self.set_coordinates(coordinates)
         self.set_danger(danger)
         self.set_description(description)
-        self.set_published(published)
 
     def set_id(self, id):
         self.id = id
@@ -70,9 +69,6 @@ class Route():
 
     def set_description(self, description):
         self.description = description
-
-    def set_published(self, published):
-        self.published = published
 
     def create_route(self):
         pass

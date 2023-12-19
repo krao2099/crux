@@ -1,6 +1,6 @@
 class Crag():
     
-    def __init__(self, id, date, name, state, coordinates, description, image, rating, user, published=False):
+    def __init__(self, id, date, name, state, coordinates, description, image, rating, user):
         self.set_id(id)
         self.set_date(date)
         self.set_name(name)
@@ -10,7 +10,6 @@ class Crag():
         self.set_image(image)
         self.set_rating(rating)
         self.set_user(user)
-        self.set_published(published)
 
     def set_id(self, id):
         self.id = id
@@ -32,9 +31,6 @@ class Crag():
 
     def set_image(self, image):
         self.image = image
-
-    def set_published(self, published):
-        self.published = published
 
     def set_rating(self, rating):
         self.rating = rating
