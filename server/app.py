@@ -24,15 +24,18 @@ async def create_user():
 def create_crag():
     data = request.json
     new_crag = Crag(
-        name=data.get('name', None),
-        state=data.get('state', None),
-        coordinates=data.get('coordinates', None),
-        description=data.get('description', None),
-        image=data.get('image', None),
-        user=data.get('user', None),
+        None,
+        None,
+        data.get('name', None),
+        data.get('state', None),
+        data.get('coordinates', None),
+        data.get('description', None),
+        data.get('image', None),
+        None,
+        data.get('user', None)
     )
     new_crag.create_crag()
-    return jsonify({'message': 'User created !'}), 200
+    return jsonify({'message': 'Crag created !'}), 200
 
 @app.route('/test', methods=['GET'])
 def test():
