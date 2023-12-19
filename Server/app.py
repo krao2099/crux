@@ -9,7 +9,7 @@ app = Flask(__name__)
 @app.route('/user', methods=['POST'])
 def create_user():
     data = request.json
-    new_user = user(None, data.name, data.grade, data.rating, data.style, data.height, data.safety, data.image, data.FA, data.setter, data.wall, data.numBolts, data.pads, data.coordinates, data.danger, data.description)
+    new_user = user(None, None, data.username, data.email, data.hash_password, None, None, None)
     new_user.create_user()
     return jsonify({'message': 'User created !'}), 200
 
