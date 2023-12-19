@@ -41,16 +41,28 @@ class Crag():
     def create_crag(self):
         pass
 
+    #wait on this one
     def edit_crag(cragId, name, coordinates, description, image):
         pass
 
-    def published_crag(cragId):
+    #Procedure needed, wait
+    def view_crag(userId, cragId):
         pass
 
-    def get_all_crags_pins():
+    def publish_crag(userId, cragId):
         pass
 
-    def get_crags_state(state):
+    def get_all_unpublish_crags(userId):
+        pass
+
+    def get_my_unpublish_crags(userId):
+        pass
+
+    #wait on this one
+    def get_all_crags__by_pins():
+        pass
+
+    def get_crags_by_state(state):
         pass
 
     def get_historical(cragId):
