@@ -1,6 +1,6 @@
 from base import base
 
-class User(base):
+class user(base):
     def __init__(self, id, date, user_name, email, hash_pass, loginAttempts, ttl, admin=False):
         super().__init__(id,date)
         self.set_user_name(user_name)
