@@ -28,38 +28,37 @@ class user(Base):
         )
         engine = create_engine(url)
         connection = engine.connect()
-        Base.metadata.create_all(engine)
 
         Session = sessionmaker(bind=engine)
         return Session()
     
-    def __init__(self, id, date, user_name, email, hash_pass, loginAttempts, ttl, admin=False):
+    def __init__(self, id, date, username, email, hash_password, login_attempts, ttl, admin_flag=False):
         self.set_id = id
-        self.set_date = date
-        self.set_user_name(user_name)
+        self.set_creation_date = date
+        self.set_username(username)
         self.set_email(email)
-        self.set_hash_pass(hash_pass)
-        self.set_loginAttempts(loginAttempts)
+        self.set_hash_password(hash_password)
+        self.set_login_attempts(login_attempts)
         self.set_ttl(ttl)
-        self.set_admin(admin)
+        self.set_admin_flag(admin_flag)
 
-    def set_user_name(self, user_name):
-        self.user_name = user_name
+    def set_username(self, username):
+        self.username = username
 
     def set_email(self, email):
         self.email = email
 
-    def set_hash_pass(self, hash_pass):
-        self.hash_pass = hash_pass
+    def set_hash_password(self, hash_password):
+        self.hash_password = hash_password
 
-    def set_loginAttempts(self, loginAttempts):
-        self.loginAttempts = loginAttempts
+    def set_login_attempts(self, login_attempts):
+        self.login_attempts = login_attempts
 
     def set_ttl(self, ttl):
         self.ttl = ttl
 
-    def set_admin(self, admin):
-        self.admin = admin
+    def set_admin_flag(self, admin_flag):
+        self.admin_flag = admin_flag
     
     def set_id(self, id):
         self.id = id
@@ -68,7 +67,10 @@ class user(Base):
         self.date = date
 
     def create_user(self):
-        pass
+        session = self.db_connect()
+        session.add(user)
+        session.commit()
+        session.close()
     
     def login_in_user(username, password):
         pass
