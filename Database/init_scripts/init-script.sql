@@ -9,13 +9,34 @@ CREATE TABLE  Users (
     ttl TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE PROCEDURE UpdateTTL(itemId INTEGER)
+CREATE PROCEDURE LoginAttempt(userId INTEGER, hash_password VARCHAR(65534))
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    UPDATE Users
-    SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
-    WHERE id = itemId;
+    --if current time is greater than ttl, check password
+    IF CURRENT_TIMESTAMP > (SELECT ttl FROM Users WHERE id = userId)
+        BEGIN
+        --if password is equal to hashpass, set loginAttempts 0 and return true
+        IF hash_password == (SELECT hash_password FROM Users WHERE id = userId)
+            BEGIN
+                UPDATE Users SET loginAttempts = 0 WHERE id = userId; 
+                RETURN SELECT 'True'
+            END
+        --else increment loginAttempts
+        ELSE
+            BEGIN
+                UPDATE Users SET loginAttempts = (SELECT loginAttempts FROM Users WHERE id = userId) + 1 WHERE id = userId;
+            END
+        END
+    --if loginAttempts > 10, update ttl
+    IF (SELECT loginAttempts FROM Users WHERE id = userId) >= 10
+        BEGIN
+                UPDATE Users
+                SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
+                WHERE id = itemId;
+        END
+    --return false
+    RETURN SELECT 'False'
 END;
 $$;
 
