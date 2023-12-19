@@ -4,7 +4,7 @@ CREATE TABLE  Users (
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(254) UNIQUE NOT NULL,
     hash_password VARCHAR(65534) NOT NULL,
-    admin_flag BOOLEAN,
+    admin_flag BOOLEAN DEFAULT FALSE,
     login_attempts INTEGER DEFAULT 0,
     ttl TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
