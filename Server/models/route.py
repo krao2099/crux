@@ -1,9 +1,8 @@
-from base import base
-
-class route(base):
+class route():
     
     def __init__(self, id, date, name, grade, rating, style, height, safety, image, FA, setter, wall, numBolts, pads, coordinates, danger, description, published=False):
-        super().__init__(id,date)
+        self.set_id(id)
+        self.set_date(date)
         self.set_name(name)
         self.set_grade(grade)
         self.set_rating(rating)
@@ -21,6 +20,12 @@ class route(base):
         self.set_description(description)
         self.set_published(published)
 
+    def set_id(self, id):
+        self.id = id
+
+    def set_date(self, date):
+        self.date = date
+    
     def set_name(self, name):
         self.name = name
 

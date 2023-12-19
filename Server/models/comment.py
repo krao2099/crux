@@ -1,13 +1,18 @@
-from base import base
-
-class comment(base):
+class comment():
     
     def __init__(self, id, date, user, owner, text, beta):
-        super().__init__(id,date)
+        self.set_id(id)
+        self.set_date(date)
         self.set_user(user) #fK to user
         self.set_owner(owner) #fk to either crag, wall, or route
         self.set_text(text)
         self.set_beta(beta)
+
+    def set_id(self, id):
+        self.id = id
+
+    def set_date(self, date):
+        self.date = date
 
     def set_user(self, user):
         self.user = user

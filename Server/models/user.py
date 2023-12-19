@@ -5,14 +5,20 @@ class user():
         return psycopg2.connect(host="localhost",dbname="crux_db", user="postgres", password="test1234")
     
     def __init__(self, id, date, username, email, hash_password, login_attempts, ttl, admin_flag=False):
-        self.set_id = id
-        self.set_creation_date = date
+        self.set_id(id)
+        self.set_date(date)
         self.set_username(username)
         self.set_email(email)
         self.set_hash_password(hash_password)
         self.set_login_attempts(login_attempts)
         self.set_ttl(ttl)
         self.set_admin_flag(admin_flag)
+
+    def set_id(self, id):
+        self.id = id
+
+    def set_date(self, date):
+        self.date = date
 
     def set_username(self, username):
         self.username = username
