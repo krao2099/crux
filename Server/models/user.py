@@ -1,6 +1,6 @@
 from sqlalchemy import ForeignKey, create_engine
 from sqlalchemy.engine import URL
-from sqlalchemy import Column, Integer, String, DateTime, Text
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 from datetime import datetime
 from sqlalchemy.orm import relationship, backref
@@ -14,7 +14,7 @@ class user(Base):
     username = Column(String(50), nullable=False, unique=True)
     email = Column(String(254), nullable=False, unique=True)
     hash_password = Column(String(65534), nullable=False)
-    admin_flag = Column(bool, default=False)
+    admin_flag = Column(Boolean, default=False)
     login_attempts = Column(Integer, default=0)
     ttl = Column(DateTime(), default=datetime.now)
 
