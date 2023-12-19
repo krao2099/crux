@@ -5,7 +5,7 @@ CREATE TABLE  Users (
     email VARCHAR(254) UNIQUE NOT NULL,
     hash_password VARCHAR(65534) NOT NULL,
     admin_flag BOOLEAN,
-    loginAttempts INTEGER DEFAULT 0,
+    login_attempts INTEGER DEFAULT 0,
     ttl TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -16,20 +16,20 @@ BEGIN
     --if current time is greater than ttl, check password
     IF CURRENT_TIMESTAMP > (SELECT ttl FROM Users WHERE username = user)
         BEGIN
-        --if password is equal to hashpass, set loginAttempts 0 and return true
+        --if password is equal to hashpass, set login_attempts 0 and return true
         IF hash_password == (SELECT hash_password FROM Users WHERE username = user)
             BEGIN
-                UPDATE Users SET loginAttempts = 0 WHERE username = user; 
+                UPDATE Users SET login_attempts = 0 WHERE username = user; 
                 RETURN SELECT 'True'
             END
-        --else increment loginAttempts
+        --else increment login_attempts
         ELSE
             BEGIN
-                UPDATE Users SET loginAttempts = (SELECT loginAttempts FROM Users WHERE username = user) + 1 WHERE username = user;
+                UPDATE Users SET login_attempts = (SELECT login_attempts FROM Users WHERE username = user) + 1 WHERE username = user;
             END
         END
-    --if loginAttempts > 10, update ttl
-    IF (SELECT loginAttempts FROM Users WHERE username = user) >= 10
+    --if login_attempts > 10, update ttl
+    IF (SELECT login_attempts FROM Users WHERE username = user) >= 10
         BEGIN
                 UPDATE Users
                 SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
