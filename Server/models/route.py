@@ -2,7 +2,7 @@ from base import base
 
 class route(base):
     
-    def __init__(self, id, date, name, grade, rating, style, height, safety, image, FA, setter, wall, numBolts, pads, coordinates, danger, description):
+    def __init__(self, id, date, name, grade, rating, style, height, safety, image, FA, setter, wall, numBolts, pads, coordinates, danger, description, published=False):
         super().__init__(id,date)
         self.set_name(name)
         self.set_grade(grade)
@@ -19,6 +19,7 @@ class route(base):
         self.set_coordinates(coordinates)
         self.set_danger(danger)
         self.set_description(description)
+        self.set_published(published)
 
     def set_name(self, name):
         self.name = name
@@ -64,3 +65,30 @@ class route(base):
 
     def set_description(self, description):
         self.description = description
+
+    def set_published(self, published):
+        self.published = published
+
+    def create_route(self):
+        pass
+
+    def edit_route(self, name, grade, rating, style, height, safety, image, FA, setter, wall, numBolts, pads, coordinates, danger, description):
+        pass
+
+    def publish_route(routeId):
+        pass
+
+    def get_all_routes_per_crag(cragId):
+        pass
+
+    def get_all_routes_per_wall(wallId):
+        pass
+
+    def get_complete_routes(userid):
+        pass
+
+    def get_uncomplete_routes(userid):
+        pass
+
+    def get_historical(routeId):
+        pass

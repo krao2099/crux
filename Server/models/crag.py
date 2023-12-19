@@ -37,3 +37,21 @@ class crag(base):
 
     def set_user(self, user):
         self.user = user
+
+    def create_crag(self):
+        pass
+
+    def edit_crag(cragId, name, coordinates, description, image):
+        pass
+
+    def published_crag(cragId):
+        pass
+
+    def get_all_crags_pins():
+        pass
+
+    def get_crags_state(state):
+        pass
+
+    def get_historical(cragId):
+        pass

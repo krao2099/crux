@@ -53,3 +53,21 @@ class wall(base):
 
     def set_published(self, published):
         self.published = published
+
+    def create_wall(self):
+        pass
+
+    def edit_wall(wallId, name, coordinates, description, image, directions):
+        pass
+
+    def publish_wall(wallId):
+        pass
+
+    def get_walls_per_crag(cragId):
+        pass
+
+    def get_all_walls():
+        pass
+
+    def get_historical(wallId):
+        pass

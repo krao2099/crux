@@ -27,3 +27,9 @@ class User(base):
 
     def set_admin(self, admin):
         self.admin = admin
+
+    def create_user(self):
+        pass
+    
+    def login_in_user(username, password):
+        pass
