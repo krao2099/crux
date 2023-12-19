@@ -22,7 +22,7 @@ class user(Base):
         url = URL.create(
             drivername="postgresql",
             username="postgres",
-            password="test1234"
+            password="test1234",
             host="localhost:5432",
             database="crux_db"
         )
