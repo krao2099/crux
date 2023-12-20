@@ -1,0 +1,35 @@
+version: '3'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    user: postgres
+    secrets:
+      - db-password
+    environment:
+      POSTGRES_DB: crux_db
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+    volumes:
+      - ./database/init_scripts:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      dockerfile: Dockerfile
+      context: ./server
+    ports:
+      - 5000:5000
+    secrets:
+      - db-password
+    depends_on:
+      db:
+        condition: service_healthy
+        restart: true
+
+secrets:
+  db-password:
+    file: database/db_pass.txt

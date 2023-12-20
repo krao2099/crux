@@ -1,11 +1,12 @@
 from flask import Flask, request, jsonify
 from models.user import User
 from models.crag import Crag
+from db import setPass
 import os
 
 app = Flask(__name__)
 
-
+setPass()
 
 @app.route('/user', methods=['POST'])
 async def create_user():
