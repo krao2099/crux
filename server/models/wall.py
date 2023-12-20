@@ -1,9 +1,8 @@
-from base import base
-
-class wall(base):
+class Wall():
     
-    def __init__(self, id, date, name, crag, coordinates, description, image, rating, user, boulder, directions, avgHeight=0,maxHeight=0,published=False):
-        super().__init__(id,date)
+    def __init__(self, id, date, name, crag, coordinates, description, image, rating, user, boulder, directions, avgHeight=0,maxHeight=0):
+        self.set_id(id)
+        self.set_date(date)
         self.set_name(name)
         self.set_crag(crag) #FK to crag
         self.set_coordinates(coordinates)
@@ -15,8 +14,12 @@ class wall(base):
         self.set_directions(directions)
         self.set_avgHeight(avgHeight)
         self.set_maxHeight(maxHeight)
-        self.set_published(published)
 
+    def set_id(self, id):
+        self.id = id
+
+    def set_date(self, date):
+        self.date = date
 
     def set_name(self, name):
         self.name = name
@@ -50,9 +53,6 @@ class wall(base):
     
     def set_maxHeight(self, maxHeight):
         self.maxHeight = maxHeight
-
-    def set_published(self, published):
-        self.published = published
 
     def create_wall(self):
         pass

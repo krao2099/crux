@@ -1,9 +1,8 @@
-from base import base
-
-class crag(base):
+class Crag():
     
-    def __init__(self, id, date, name, state, coordinates, description, image, rating, user, published=False):
-        super().__init__(id,date)
+    def __init__(self, id, date, name, state, coordinates, description, image, rating, user):
+        self.set_id(id)
+        self.set_date(date)
         self.set_name(name)
         self.set_state(state)
         self.set_coordinates(coordinates)
@@ -11,8 +10,12 @@ class crag(base):
         self.set_image(image)
         self.set_rating(rating)
         self.set_user(user)
-        self.set_published(published)
 
+    def set_id(self, id):
+        self.id = id
+
+    def set_date(self, date):
+        self.date = date
 
     def set_name(self, name):
         self.name = name
@@ -29,9 +32,6 @@ class crag(base):
     def set_image(self, image):
         self.image = image
 
-    def set_published(self, published):
-        self.published = published
-
     def set_rating(self, rating):
         self.rating = rating
 
@@ -41,16 +41,28 @@ class crag(base):
     def create_crag(self):
         pass
 
+    #wait on this one
     def edit_crag(cragId, name, coordinates, description, image):
         pass
 
-    def published_crag(cragId):
+    #Procedure needed, wait
+    def view_crag(userId, cragId):
         pass
 
-    def get_all_crags_pins():
+    def publish_crag(userId, cragId):
         pass
 
-    def get_crags_state(state):
+    def get_all_unpublish_crags(userId):
+        pass
+
+    def get_my_unpublish_crags(userId):
+        pass
+
+    #wait on this one
+    def get_all_crags__by_pins():
+        pass
+
+    def get_crags_by_state(state):
         pass
 
     def get_historical(cragId):

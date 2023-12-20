@@ -54,7 +54,7 @@ CREATE TABLE Crags (
     image_path VARCHAR(100),
     rating FLOAT,
     user_id INTEGER REFERENCES Users(id),
-    published BOOLEAN
+    published BOOLEAN DEFAULT FALSE
 );
 
 --allow for easy returning of published vs unpublished areas
@@ -73,7 +73,7 @@ CREATE TABLE Walls (
     user_id INTEGER REFERENCES Users(id),
     avg_height FLOAT,
     max_height FLOAT,
-    published BOOLEAN,
+    published BOOLEAN DEFAULT FALSE,
     boulder BOOLEAN,
     directions VARCHAR(100)
 );
@@ -100,7 +100,7 @@ CREATE TABLE Routes (
     bolts INTEGER,
     pads INTEGER,
     danger INTEGER,
-    published BOOLEAN
+    published BOOLEAN DEFAULT FALSE
 );
 
 --historical tables will all have the same fields as the others, and a version number
