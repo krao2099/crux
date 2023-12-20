@@ -1,5 +1,5 @@
 import db
-class user():
+class User():
     def __init__(self, id, date, username, email, hash_password, login_attempts, ttl, admin_flag=False):
         self.set_id = id
         self.set_creation_date = date
