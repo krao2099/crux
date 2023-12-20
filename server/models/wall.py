@@ -58,11 +58,11 @@ class Wall():
     def create_wall(self):
         query = """INSERT INTO Walls (name, crag_id, coordinates, description, 
                                         image_path, rating, user_id, 
-                                        published, boulder, directions) VALUES (%s, %s, %s, %s, %s, 
+                                        boulder, directions) VALUES (%s, %s, %s, %s, 
                                                                                 %s, %s, %s, %s, %s)"""
         record = (self.name, self.crag_id, self.coordinates, 
                   self.description, self.image_path, self.rating, 
-                  self.user_id, self.published, self.boulder, self.directions)
+                  self.user_id, self.boulder, self.directions)
         try:
             db.execute(query, record)
         except Exception as e: 
