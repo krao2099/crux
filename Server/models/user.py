@@ -1,9 +1,5 @@
-import psycopg2
-
+import db
 class user():
-    def db_connect(self):
-        return psycopg2.connect(host="localhost",dbname="crux_db", user="postgres", password="test1234")
-    
     def __init__(self, id, date, username, email, hash_password, login_attempts, ttl, admin_flag=False):
         self.set_id = id
         self.set_creation_date = date
@@ -39,15 +35,12 @@ class user():
         self.date = date
 
     def create_user(self):
-        conn = self.db_connect()
-        cursor = conn.cursor()
-
-        query = """ INSERT INTO Users (username, email, hash_password) VALUES (%s, %s, %s)"""
+        query = "INSERT INTO Users (username, email, hash_password) VALUES (%s, %s, %s)"
         record = (self.username, self.email, self.hash_password)
-        cursor.execute(query, record)
-        conn.commit()
-        conn.close()
-        print("Success")
+        try:
+            db.db_insert(query, record)
+        except: 
+            print("an exception has occured")
     
     def login_in_user(username, password):
         pass
