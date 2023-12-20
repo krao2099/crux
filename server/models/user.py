@@ -39,8 +39,8 @@ class User():
         record = (self.username, self.email, self.hash_password)
         try:
             db.db_insert(query, record)
-        except: 
-            print("an exception has occured")
+        except Exception as e: 
+            raise e
     
     def login_in_user(username, password):
         pass

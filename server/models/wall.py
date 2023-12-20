@@ -1,10 +1,11 @@
+import db
 class Wall():
     
-    def __init__(self, id, date, name, crag, coordinates, description, image, rating, user, boulder, directions, avgHeight=0,maxHeight=0):
+    def __init__(self, id, date, name, crag_id, coordinates, description, image, rating, user, boulder, directions, avgHeight=0,maxHeight=0):
         self.set_id(id)
         self.set_date(date)
         self.set_name(name)
-        self.set_crag(crag) #FK to crag
+        self.set_crag_id(crag_id) #FK to crag
         self.set_coordinates(coordinates)
         self.set_description(description)
         self.set_image(image)
@@ -24,8 +25,8 @@ class Wall():
     def set_name(self, name):
         self.name = name
 
-    def set_crag(self, crag):
-        self.crag = crag
+    def set_crag_id(self, crag_id):
+        self.crag_id = crag_id
     
     def set_coordinates(self, coordinates):
         self.coordinates = coordinates
@@ -55,19 +56,45 @@ class Wall():
         self.maxHeight = maxHeight
 
     def create_wall(self):
-        pass
+        query = """INSERT INTO Walls (name, crag_id, coordinates, description, 
+                                        image_path, rating, user_id, 
+                                        published, boulder, directions) VALUES (%s, %s, %s, %s, %s, 
+                                                                                %s, %s, %s, %s, %s)"""
+        record = (self.name, self.crag_id, self.coordinates, 
+                  self.description, self.image_path, self.rating, 
+                  self.user_id, self.published, self.boulder, self.directions)
+        try:
+            db.execute(query, record)
+        except Exception as e: 
+            raise e
 
-    def edit_wall(wallId, name, coordinates, description, image, directions):
-        pass
+    def publish_wall(wall_id):
+        query = """UPDATE Walls SET published = TRUE WHERE id = %s"""
+        params = (wall_id)
+        try:
+            db.execute(query, params)
+        except Exception as e: 
+            raise e
 
-    def publish_wall(wallId):
-        pass
-
-    def get_walls_per_crag(cragId):
-        pass
+    def get_walls_per_crag(crag_id):
+        query = """SELECT COUNT(*) FROM Walls WHERE crag_id = %s"""
+        params = (crag_id)
+        try:
+            return db.execute(query, params)
+        except Exception as e:
+            raise e
 
     def get_all_walls():
-        pass
+        query = """SELECT * FROM Walls"""
+        try:
+            return db.execute(query)
+        except Exception as e:
+            raise e
 
-    def get_historical(wallId):
-        pass
+    def get_historical(wall_id):
+        query = """SELECT * FROM WallsHistorical WHERE wall_id = %s ORDER BY version_number DESC"""
+        params = (wall_id)
+        try:
+            return db.execute(query, params)
+        except Exception as e:
+            raise e
