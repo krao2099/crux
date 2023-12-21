@@ -26,14 +26,13 @@ def execute(query, params, retrieve=False):
     return return_val
 
 def retrieve(query, params):
-    conn = get_conn()
-    cursor = conn.cursor()
-    if params == None:
-        cursor.execute(query)
-    else:
-        cursor.execute(query, params)
-    result = cursor.fetchall()
-    conn.commit()
-    conn.close()
-
+    result = None
+    with get_conn() as conn:
+        with conn.cursor() as cursor:
+            if params == None:
+                cursor.execute(query)
+            else:
+                cursor.execute(query, params)
+                result = cursor.fetchall()
+        conn.commit()
     return result

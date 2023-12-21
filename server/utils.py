@@ -1,10 +1,9 @@
 import db
 
 def is_admin(user_id):
-    query = """SELECT * FROM Admins"""
-    params = ()
+    query = """SELECT admin_flag FROM Users WHERE id = %s;"""
     try:
-        result = db.execute(query, params, retrieve=True)
-        return user_id in result
+        result = db.retrieve(query, user_id)
+        return result[0]
     except Exception as e:
         raise e
