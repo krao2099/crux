@@ -4,6 +4,7 @@ from models.user import User
 from models.crag import Crag
 from db import setPass
 from psycopg2.errors import UniqueViolation
+from utils import is_admin
 import os
 
 app = Flask(__name__)
@@ -38,7 +39,7 @@ async def create_user():
 @app.route('/login', methods=['POST'])
 async def login():
     if session['user_id']:
-        return jsonify({'message': 'logged_in'}), 200
+        return jsonify({'Success': 'logged_in'}), 200
     data = request.json
     if 'username' not in data or 'password' not in data:
         return jsonify({'Error': 'Missing Data !'}), 400
@@ -49,6 +50,16 @@ async def login():
         session['user_id'] = User.login_success(data['username'])
         return jsonify({'Success': 'logged_in'}), 200
     return jsonify({'Error': 'fail_login'}), 200
+
+@app.route('/check_admin', methods=['POST'])
+async def isAdmin():
+    if not session['user_id']:
+        return jsonify({'Error': 'No User Data'}), 200
+    if is_admin(session['user_id']):
+        return jsonify({'Success': 'Verified Admin'}), 200
+    return jsonify({'Error': 'Invalid Permissions'}), 200
+
+    
 
 @app.route('/logout', methods=['POST'])
 async def logout():
