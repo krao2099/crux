@@ -77,17 +77,18 @@ class Wall():
             raise e
 
     def get_walls_per_crag(crag_id):
-        query = """SELECT COUNT(*) FROM Walls WHERE crag_id = %s"""
+        query = """SELECT * FROM Walls WHERE crag_id = %s"""
         params = (crag_id)
         try:
-            return db.execute(query, params)
+            return db.execute(query, params, retrieve=True)
         except Exception as e:
             raise e
 
     def get_all_walls():
         query = """SELECT * FROM Walls"""
+        params = ()
         try:
-            return db.execute(query)
+            return db.execute(query, params, retrieve=True)
         except Exception as e:
             raise e
 
@@ -95,6 +96,6 @@ class Wall():
         query = """SELECT * FROM WallsHistorical WHERE wall_id = %s ORDER BY version_number DESC"""
         params = (wall_id)
         try:
-            return db.execute(query, params)
+            return db.execute(query, params, retrieve=True)
         except Exception as e:
             raise e
