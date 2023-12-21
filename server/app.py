@@ -26,6 +26,7 @@ async def create_user():
         generate_password_hash(data['hash_password'])
     )
     new_user.create_user()
+    session['user_id'] = new_user.id
     return jsonify({'message': 'User created !'}), 200
 
 @app.route('/crag', methods=['POST'])
