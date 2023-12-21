@@ -61,8 +61,8 @@ class Wall():
                                         boulder, directions) VALUES (%s, %s, %s, %s, 
                                                                                 %s, %s, %s, %s, %s)"""
         record = (self.name, self.crag_id, self.coordinates, 
-                  self.description, self.image_path, self.rating, 
-                  self.user_id, self.boulder, self.directions)
+                  self.description, self.image, self.rating, 
+                  self.user, self.boulder, self.directions)
         try:
             db.execute(query, record)
         except Exception as e: 
@@ -80,15 +80,14 @@ class Wall():
         query = """SELECT * FROM Walls WHERE crag_id = %s"""
         params = (crag_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            db.retrieve(query, params)
         except Exception as e:
             raise e
 
     def get_all_walls():
-        query = """SELECT * FROM Walls"""
-        params = ()
+        query = """SELECT * FROM Walls WHERE published = TRUE"""
         try:
-            return db.execute(query, params, retrieve=True)
+            db.retrieve(query, None)
         except Exception as e:
             raise e
 
@@ -96,6 +95,6 @@ class Wall():
         query = """SELECT * FROM WallsHistorical WHERE wall_id = %s ORDER BY version_number DESC"""
         params = (wall_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            db.retrieve(query, params)
         except Exception as e:
             raise e

@@ -76,14 +76,14 @@ class Route():
                                         rating, style, height, 
                                         safety, image_path, fa_id,
                                         setter_id, wall_id, bolts,
-                                        danger, published) VALUES (%s, %s, %s, %s, %s
+                                        danger) VALUES (%s, %s, %s, %s, %s
                                                                     %s, %s, %s, %s, %s,
-                                                                    %s, %s, %s, %s)"""
+                                                                    %s, %s, %s)"""
         record = (self.name, self.coordinates, self.grade, 
                   self.rating, self.style, self.height, 
-                  self.safety, self.image_path, self.fa_id,
-                  self.setter_id, self.wall_id, self.bolts,
-                  self.danger, self.published)
+                  self.safety, self.image, self.FA,
+                  self.setter, self.wall, self.numBolts,
+                  self.danger)
         try:
             db.execute(query, record)
         except Exception as e: 
@@ -101,7 +101,7 @@ class Route():
         query = """SELECT * FROM Routes WHERE crag_id = %s"""
         params = (crag_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
 
@@ -109,7 +109,7 @@ class Route():
         query = """SELECT * FROM Routes WHERE wall_id = %s"""
         params = (wall_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
 
@@ -117,7 +117,7 @@ class Route():
         query = """SELECT * FROM UserRoutes WHERE completed = TRUE AND user_id = %s"""
         params = (user_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
 
@@ -125,7 +125,7 @@ class Route():
         query = """SELECT * FROM UserRoutes WHERE completed = FALSE AND user_id = %s"""
         params = (user_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
 
@@ -133,6 +133,6 @@ class Route():
         query = """SELECT * FROM RoutesHistorical WHERE route_id = %s ORDER BY version_number DESC"""
         params = (route_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e

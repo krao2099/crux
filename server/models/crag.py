@@ -44,11 +44,11 @@ class Crag():
     def create_crag(self):
         query = """INSERT INTO Crags (name, creation_date, state, coordinates, 
                                         description, image_path, rating, 
-                                        user_id, published) VALUES (%s, %s, %s, %s, 
-                                                                                %s, %s, %s, %s, %s)"""
-        record = (self.name, self.creation_date, self.state, 
-                  self.coordinates, self.description, self.image_path, 
-                  self.rating, self.user_id, self.published)
+                                        user_id) VALUES (%s, %s, %s, %s, 
+                                                                                %s, %s, %s, %s)"""
+        record = (self.name, self.date, self.state, 
+                  self.coordinates, self.description, self.image, 
+                  self.rating, self.user)
         try:
             db.execute(query, record)
         except Exception as e: 
@@ -71,9 +71,8 @@ class Crag():
 
     def get_all_unpublish_crags():
         query = """SELECT * FROM Crags WHERE published = FALSE"""
-        params = ()
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, None)
         except Exception as e:
             raise e
 
@@ -81,7 +80,7 @@ class Crag():
         query = """SELECT * FROM Crags WHERE published = FALSE AND user_id = %s"""
         params = (user_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
 
@@ -93,7 +92,7 @@ class Crag():
         query = """SELECT * FROM Crags WHERE published = TRUE AND state = %s"""
         params = (state)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
 
@@ -101,6 +100,6 @@ class Crag():
         query = """SELECT * FROM CragsHistorical WHERE crag_id = %s ORDER BY version_number DESC"""
         params = (crag_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e

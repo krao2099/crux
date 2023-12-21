@@ -32,7 +32,7 @@ class Comment():
         query = """SELECT * FROM RouteComments WHERE route_id = %s AND beta = TRUE"""
         params = (route_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
 
@@ -40,7 +40,7 @@ class Comment():
         query = """SELECT * FROM RouteComments JOIN Routes ON RouteComments.route_id = Routes.id WHERE wall_id = %s"""
         params = (wall_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
 
@@ -59,6 +59,6 @@ class Comment():
                     WHERE crag_id = %s"""
         params = (crag_id)
         try:
-            return db.execute(query, params, retrieve=True)
+            return db.retrieve(query, params)
         except Exception as e:
             raise e
