@@ -31,5 +31,8 @@ class User():
         except Exception as e: 
             raise e
     
-    def login_in_user(username, password):
+    def retrieve_hash_password(username):
+        pass
+
+    def login_success(username):
         pass

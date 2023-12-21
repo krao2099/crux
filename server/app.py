@@ -17,7 +17,7 @@ setPass()
 async def create_user():
     data = request.json
     if 'username' not in data or 'email' not in data or 'hash_password' not in data:
-        return jsonify({'message': 'Missing Data !'}), 400
+        return jsonify({'Error': 'Missing Data !'}), 400
     new_user = User(
         None,
         None,
@@ -25,7 +25,12 @@ async def create_user():
         data['email'],
         generate_password_hash(data['hash_password'])
     )
-    new_user.create_user()
+    try:
+        new_user.create_user()
+    except Exception as e:
+        if "duplicate key" in e:
+            return jsonify({'Error': 'Duplicate Username !'}), 400
+        return jsonify({ 'Error' : str(e)})
     session['user_id'] = new_user.id
     return jsonify({'message': 'User created !'}), 200
 

@@ -11,7 +11,7 @@ def get_conn():
     return psycopg2.connect(host="db",dbname="crux_db", user="postgres", password=DB_PASSWORD)
 
 
-#prob could make this one function with optional params but not sure what is easier
+#Inserts, updates
 def execute(query, params, retrieve=False):
     return_val = None
     with get_conn() as conn:
@@ -25,6 +25,7 @@ def execute(query, params, retrieve=False):
         conn.commit()
     return return_val
 
+#Selects
 def retrieve(query, params):
     result = None
     with get_conn() as conn:
