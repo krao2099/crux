@@ -17,6 +17,15 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: 'redis:latest'
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   server:
     build:
       dockerfile: Dockerfile
@@ -27,6 +36,9 @@ services:
       - db-password
     depends_on:
       db:
+        condition: service_healthy
+        restart: true
+      redis:
         condition: service_healthy
         restart: true
 

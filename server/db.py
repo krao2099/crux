@@ -12,12 +12,18 @@ def get_conn():
 
 
 #prob could make this one function with optional params but not sure what is easier
-def execute(query, params):
-    conn = get_conn()
-    cursor = conn.cursor()
-    cursor.execute(query, params)
-    conn.commit()
-    conn.close()
+def execute(query, params, retrieve=False):
+    return_val = None
+    with get_conn() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(query, params)
+            if retrieve:
+                temp = cursor.fetchone()
+                print(temp)
+                return_val = temp[0]
+                print(return_val)
+        conn.commit()
+    return return_val
 
 def retrieve(query, params):
     conn = get_conn()

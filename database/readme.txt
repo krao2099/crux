@@ -11,3 +11,5 @@ docker run --name pgsql-dev -e POSTGRES_PASSWORD=test1234 -e POSTGRES_DB=crux_db
 
 
 docker exec -it pgsql-dev bash
+
+psql -h localhost -U postgres

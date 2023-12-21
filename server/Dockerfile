@@ -4,6 +4,8 @@ FROM python:3.8
 # Set the working directory to /app
 WORKDIR /src
 
+ENV PYTHONUNBUFFERED=1
+
 COPY . .
 
 RUN pip3 install -r requirements.txt

@@ -1,11 +1,17 @@
 import db
 class User():
     def __init__(self, id, date, username, email, hash_password):
-        self.set_id = id
-        self.set_creation_date = date
+        self.set_id(id)
+        self.set_date(date)
         self.set_username(username)
         self.set_email(email)
         self.set_hash_password(hash_password)
+
+    def set_id(self, id):
+        self.id = id
+
+    def set_date(self, date):
+        self.date = date
 
     def set_username(self, username):
         self.username = username
@@ -16,17 +22,12 @@ class User():
     def set_hash_password(self, hash_password):
         self.hash_password = hash_password
 
-    def set_id(self, id):
-        self.id = id
-
-    def set_date(self, date):
-        self.date = date
 
     def create_user(self):
-        query = "INSERT INTO Users (username, email, hash_password) VALUES (%s, %s, %s)"
+        query = "INSERT INTO Users (username, email, hash_password) VALUES (%s, %s, %s) RETURNING id;"
         record = (self.username, self.email, self.hash_password)
         try:
-            db.execute(query, record)
+            self.set_id(db.execute(query, record, retrieve=True))
         except Exception as e: 
             raise e
     

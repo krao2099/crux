@@ -2,3 +2,6 @@ Flask[async]==3.0.0
 jsonify==0.5
 requests==2.28.2
 psycopg2-binary==2.9.9
+Flask-Session==0.5.0
+redis==5.0.1
+requests==2.28.2
