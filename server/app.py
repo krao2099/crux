@@ -1,6 +1,4 @@
 from flask import Flask, request, jsonify, session
-from flask_session import Session
-import redis
 from werkzeug.security import check_password_hash, generate_password_hash
 from models.user import User
 from models.crag import Crag
@@ -12,16 +10,7 @@ app = Flask(__name__)
 #TODO change the env var
 app.config['SECRET_KEY'] = 'feBOBFEO'
 
-# Configure Flask-Session to use Redis for session storage
-app.config['SESSION_TYPE'] = 'redis'
-app.config['SESSION_PERMANENT'] = False
-app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_KEY_PREFIX'] = 'crux:'
-app.config['SESSION_REDIS'] = redis.StrictRedis(host='redis', port=6379, db=0, decode_responses=True)
-
 setPass()
-
-Session(app)
 
 
 @app.route('/user', methods=['POST'])
@@ -37,7 +26,6 @@ async def create_user():
         generate_password_hash(data['hash_password'])
     )
     new_user.create_user()
-    #session['user_id'] = new_user.id
     return jsonify({'message': 'User created !'}), 200
 
 @app.route('/crag', methods=['POST'])

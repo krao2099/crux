@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.8
+FROM python:latest
 
 # Set the working directory to /app
 WORKDIR /src
