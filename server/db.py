@@ -19,9 +19,7 @@ def execute(query, params, retrieve=False):
             cursor.execute(query, params)
             if retrieve:
                 temp = cursor.fetchone()
-                print(temp)
                 return_val = temp[0]
-                print(return_val)
         conn.commit()
     return return_val
 

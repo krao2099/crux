@@ -3,6 +3,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from models.user import User
 from models.crag import Crag
 from db import setPass
+from psycopg2.errors import UniqueViolation
 import os
 
 app = Flask(__name__)
@@ -28,9 +29,9 @@ async def create_user():
     try:
         new_user.create_user()
     except Exception as e:
-        if "duplicate key" in e:
+        if type(e) is UniqueViolation:
             return jsonify({'Error': 'Duplicate Username !'}), 400
-        return jsonify({ 'Error' : str(e)})
+        return jsonify({ 'Error' : str(e)}), 500
     session['user_id'] = new_user.id
     return jsonify({'message': 'User created !'}), 200
 
