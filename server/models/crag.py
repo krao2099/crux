@@ -1,4 +1,5 @@
 import db
+import utils
 
 class Crag():
     
@@ -58,6 +59,9 @@ class Crag():
         pass
     
     def publish_crag(user_id, crag_id):
+
+        if(not utils.is_admin(user_id)):
+            raise PermissionError
         query = """UPDATE Crags SET published = TRUE WHERE id = %s"""
         params = (crag_id)
         try:
