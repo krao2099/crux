@@ -4,7 +4,7 @@ from models.user import User
 from models.crag import Crag
 from db import setPass
 from psycopg2.errors import UniqueViolation
-from utils import is_admin
+from crux_utils import is_admin
 import os
 
 app = Flask(__name__)
@@ -25,7 +25,7 @@ async def create_user():
         None,
         data['username'],
         data['email'],
-        generate_password_hash(data['hash_password'])
+        generate_password_hash(data['password'])
     )
     try:
         new_user.create_user()

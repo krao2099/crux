@@ -1,5 +1,5 @@
 import db
-import utils
+import crux_utils
 
 class Crag():
     
@@ -60,7 +60,7 @@ class Crag():
     
     def publish_crag(user_id, crag_id):
 
-        if(not utils.is_admin(user_id)):
+        if(not crux_utils.is_admin(user_id)):
             raise PermissionError
         query = """UPDATE Crags SET published = TRUE WHERE id = %s"""
         params = (crag_id)
