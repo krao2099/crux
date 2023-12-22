@@ -26,21 +26,24 @@ DECLARE
     user_password TEXT;
 BEGIN
     IF NOT _username IN (SELECT username FROM Users) THEN
-        RETURN 'user does not exist';
+        RETURN 'fail_login';
     END IF;
 
     SELECT ttl, login_attempts, hash_password INTO user_ttl, user_attempts, user_password FROM Users WHERE username = _username;
-    IF CURRENT_TIMESTAMP > ttl THEN
+    IF CURRENT_TIMESTAMP > user_ttl THEN
         UPDATE Users SET login_attempts = login_attempts + 1 WHERE username = _username;
     END IF;
 
     IF user_attempts >= 10 THEN
-            UPDATE Users
-            SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
-            WHERE username = _username;
-            RETURN 'lockout';
+        UPDATE Users
+        SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
+        WHERE username = _username;
+    END IF;
+
+    IF CURRENT_TIMESTAMP < user_ttl THEN
+        RETURN 'lockout';
     ELSE 
-        RETURN hash_password;
+        RETURN user_password;
     END IF;
 END
 $$ LANGUAGE plpgsql;
