@@ -17,6 +17,8 @@ setPass()
 
 @app.route('/user', methods=['POST'])
 async def create_user():
+    if 'user_id' in session:
+        return jsonify({'Error': 'logged_in_user'}), 200
     data = request.json
     if 'username' not in data or 'email' not in data or 'password' not in data:
         return jsonify({'Error': 'Missing Data !'}), 400
@@ -53,7 +55,7 @@ async def login():
 
 @app.route('/check_admin', methods=['POST'])
 async def isAdmin():
-    if not session['user_id']:
+    if not 'user_id' in session:
         return jsonify({'Error': 'No User Data'}), 200
     if is_admin(session['user_id']):
         return jsonify({'Success': 'Verified Admin'}), 200
@@ -63,7 +65,7 @@ async def isAdmin():
 
 @app.route('/logout', methods=['POST'])
 async def logout():
-    if not session['user_id']:
+    if not 'user_id' in session:
         return jsonify({'Error': 'No User Data'}), 200
     session.pop('user_id', default=None)
     return jsonify({'Success': 'logged_out'}), 200
