@@ -3,6 +3,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from models.user import User
 from models.crag import Crag
 from db import setPass
+from psycopg2.errors import UniqueViolation
+from crux_utils import is_admin
 import os
 
 app = Flask(__name__)
@@ -16,23 +18,55 @@ setPass()
 @app.route('/user', methods=['POST'])
 async def create_user():
     data = request.json
-    if 'username' not in data or 'email' not in data or 'hash_password' not in data:
+    if 'username' not in data or 'email' not in data or 'password' not in data:
         return jsonify({'Error': 'Missing Data !'}), 400
     new_user = User(
         None,
         None,
         data['username'],
         data['email'],
-        generate_password_hash(data['hash_password'])
+        generate_password_hash(data['password'])
     )
     try:
         new_user.create_user()
     except Exception as e:
-        if "duplicate key" in e:
+        if type(e) is UniqueViolation:
             return jsonify({'Error': 'Duplicate Username !'}), 400
-        return jsonify({ 'Error' : str(e)})
+        return jsonify({ 'Error' : str(e)}), 500
     session['user_id'] = new_user.id
-    return jsonify({'message': 'User created !'}), 200
+    return jsonify({'Success': 'User created !'}), 200
+
+@app.route('/login', methods=['POST'])
+async def login():
+    if session['user_id']:
+        return jsonify({'Success': 'logged_in'}), 200
+    data = request.json
+    if 'username' not in data or 'password' not in data:
+        return jsonify({'Error': 'Missing Data !'}), 400
+    h_pass = User.retrieve_hash_password(data['username'])
+    if h_pass == "lockout" or h_pass == "fail_login":
+        return jsonify({'Error': h_pass}), 200
+    if check_password_hash(h_pass, data['password']):
+        session['user_id'] = User.login_success(data['username'])
+        return jsonify({'Success': 'logged_in'}), 200
+    return jsonify({'Error': 'fail_login'}), 200
+
+@app.route('/check_admin', methods=['POST'])
+async def isAdmin():
+    if not session['user_id']:
+        return jsonify({'Error': 'No User Data'}), 200
+    if is_admin(session['user_id']):
+        return jsonify({'Success': 'Verified Admin'}), 200
+    return jsonify({'Error': 'Invalid Permissions'}), 200
+
+    
+
+@app.route('/logout', methods=['POST'])
+async def logout():
+    if not session['user_id']:
+        return jsonify({'Error': 'No User Data'}), 200
+    session.pop('user_id', default=None)
+    return jsonify({'Success': 'logged_out'}), 200
 
 @app.route('/crag', methods=['POST'])
 def create_crag():

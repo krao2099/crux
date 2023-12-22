@@ -1,5 +1,5 @@
 {
     "username": "test",
     "email": "test",
-    "hash_password": "test"
+    "password": "test"
 }

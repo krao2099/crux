@@ -46,7 +46,7 @@ END
 $$ LANGUAGE plpgsql;
 
 --create an admin user in the db for testing purposes
-INSERT INTO Users(username, email, hash_password, admin_flag) VALUES ('admin', 'admin@admin.com', 'password', TRUE);
+INSERT INTO Users(username, email, hash_password, admin_flag) VALUES ('admin', 'admin@admin.com', 'scrypt:32768:8:1$1sdFqQBa34P5VeRY$e33d83af141e5abb0491921447f5eafe60d081a1d81be691bdea989ff8c5d303ac57d3f137b216819c018ee6630a6a60513dc3cdea19935c16ced3ddf6e71d95', TRUE);
 CREATE VIEW Admins AS SELECT * FROM Users WHERE admin_flag = TRUE;
 
 CREATE TABLE Crags (
