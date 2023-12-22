@@ -1,4 +1,7 @@
+import sys
+sys.path.append("../Server")
 import db
+
 class User():
     def __init__(self, id, date, username, email, hash_password):
         self.set_id(id)
