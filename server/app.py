@@ -38,7 +38,7 @@ async def create_user():
 
 @app.route('/login', methods=['POST'])
 async def login():
-    if session['user_id']:
+    if 'user_id' in session:
         return jsonify({'Success': 'logged_in'}), 200
     data = request.json
     if 'username' not in data or 'password' not in data:
