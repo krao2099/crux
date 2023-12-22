@@ -34,15 +34,9 @@ class User():
     def retrieve_hash_password(username):
         query = """SELECT retrieve_hash_password(%s)"""
         params = (username)
-        try:
-            return db.retrieve(query, params)
-        except Exception as e: 
-            raise e
+        db.retrieve(query, params)
 
     def login_success(username):
         query = """SELECT login_success(%s)"""
         params = (username)
-        try:
-            return db.retrieve(query, params)
-        except Exception as e: 
-            raise e
+        db.retrieve(query, params)
