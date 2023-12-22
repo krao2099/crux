@@ -9,36 +9,41 @@ CREATE TABLE  Users (
     ttl TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- CREATE PROCEDURE LoginAttempt(user VARCHAR(50), hash_password VARCHAR(65534))
--- LANGUAGE plpgsql
--- AS $$
--- BEGIN
---     --if current time is greater than ttl, check password
---     IF CURRENT_TIMESTAMP > (SELECT ttl FROM Users WHERE username = user)
---         BEGIN
---         --if password is equal to hashpass, set login_attempts 0 and return true
---         IF hash_password == (SELECT hash_password FROM Users WHERE username = user)
---             BEGIN
---                 UPDATE Users SET login_attempts = 0 WHERE username = user; 
---                 RETURN SELECT 'True'
---             END
---         --else increment login_attempts
---         ELSE
---             BEGIN
---                 UPDATE Users SET login_attempts = (SELECT login_attempts FROM Users WHERE username = user) + 1 WHERE username = user;
---             END
---         END
---     --if login_attempts > 10, update ttl
---     IF (SELECT login_attempts FROM Users WHERE username = user) >= 10
---         BEGIN
---                 UPDATE Users
---                 SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
---                 WHERE id = itemId;
---         END
---     --return false
---     RETURN SELECT 'False'
--- END;
--- $$;
+CREATE FUNCTION login_success(_username VARCHAR(50)) RETURNS INTEGER AS $$
+DECLARE
+    user_id INTEGER;
+BEGIN
+    SELECT id INTO user_id FROM Users WHERE username = _username;
+    UPDATE Users SET login_attempts = 0, ttl = CURRENT_TIMESTAMP WHERE username = _username;
+    RETURN user_id;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION retrieve_hash_password(_username VARCHAR(50)) RETURNS TEXT AS $$
+DECLARE
+    user_ttl TIMESTAMP;
+    user_attempts INT;
+    user_password TEXT;
+BEGIN
+    IF NOT _username IN (SELECT username FROM Users) THEN
+        RETURN 'user does not exist';
+    END IF;
+
+    SELECT ttl, login_attempts, hash_password INTO user_ttl, user_attempts, user_password FROM Users WHERE username = _username;
+    IF CURRENT_TIMESTAMP > ttl THEN
+        UPDATE Users SET login_attempts = login_attempts + 1 WHERE username = _username;
+    END IF;
+
+    IF user_attempts >= 10 THEN
+            UPDATE Users
+            SET ttl = CURRENT_TIMESTAMP + INTERVAL '24 hours'
+            WHERE username = _username;
+            RETURN 'lockout';
+    ELSE 
+        RETURN hash_password;
+    END IF;
+END
+$$ LANGUAGE plpgsql;
 
 --create an admin user in the db for testing purposes
 INSERT INTO Users(username, email, hash_password, admin_flag) VALUES ('admin', 'admin@admin.com', 'password', TRUE);
