@@ -56,10 +56,8 @@ async def login():
 @app.route('/check_admin', methods=['POST'])
 async def isAdmin():
     if not 'user_id' in session:
-        return jsonify({'Error': 'No User Data'}), 200
-    if is_admin(session['user_id']):
-        return jsonify({'Success': 'Verified Admin'}), 200
-    return jsonify({'Error': 'Invalid Permissions'}), 200
+        return jsonify({'Admin': False}), 200
+    return jsonify({'Admin': is_admin(session['user_id'])}), 200
 
     
 
