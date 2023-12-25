@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, session
+from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
 from models.user import User
 from models.crag import Crag
@@ -8,6 +9,8 @@ from crux_utils import is_admin
 import os
 
 app = Flask(__name__)
+
+CORS(app, supports_credentials=True)
 
 #TODO change the env var
 app.config['SECRET_KEY'] = 'feBOBFEO'
@@ -53,7 +56,7 @@ async def login():
         return jsonify({'Success': 'logged_in'}), 200
     return jsonify({'Error': 'fail_login'}), 200
 
-@app.route('/check_admin', methods=['POST'])
+@app.route('/check_admin', methods=['GET'])
 async def isAdmin():
     if not 'user_id' in session:
         return jsonify({'Admin': False}), 200
