@@ -1,0 +1,6 @@
+#map {
+    height: 90%;
+    width: inherit;
+    background-color: #000;
+    flex: 1;
+}

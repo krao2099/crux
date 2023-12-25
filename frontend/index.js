@@ -4,22 +4,29 @@ const axios = require('axios');
 
 const app = express();
 
-// Serve static files from the "public" folder
-//app.use(express.static(path.join(__dirname, 'public')));
+app.engine('.html', require('ejs').__express);
 
-// Define a route for the root URL
+app.use('/styles', express.static(path.join(__dirname, '/styles')));
+app.use('/nav', express.static(path.join(__dirname, '/nav')));
+
+
+app.use('/home', express.static(path.join(__dirname, '/home')));
+
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'home', 'home.html'));
+  res.render(path.join(__dirname, 'home', 'home.html'));
 });
 
 app.get('/admin', async (req, res) => {
   try {
-    let response = await axios.get('http://127.0.0.1:5000/check_admin');
+    let response = await axios.get('http://127.0.0.1:5000/check_admin', {
+      withCredentials: true,
+    });
     let data = response.data;
     if (data.Admin){
       res.sendFile(path.join(__dirname, 'admin', 'admin.html'));
+    } else {
+      res.redirect('/error');
     }
-    res.redirect('/error');
   }  catch (error) {
     console.error('Error making request:', error);
     res.redirect('/error');
