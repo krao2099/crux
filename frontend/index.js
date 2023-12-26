@@ -6,14 +6,22 @@ const app = express();
 
 app.engine('.html', require('ejs').__express);
 
-app.use('/styles', express.static(path.join(__dirname, '/styles')));
-app.use('/nav', express.static(path.join(__dirname, '/nav')));
+app.use('/header', express.static(path.join(__dirname, '/header')));
+app.use('/footer', express.static(path.join(__dirname, '/footer')));
 
 
 app.use('/home', express.static(path.join(__dirname, '/home')));
 
 app.get('/', (req, res) => {
-  res.render(path.join(__dirname, 'home', 'home.html'));
+  let styles = [
+    '/home/home.css',
+  ];
+  res.render(path.join(__dirname, 'home', 'home.html'), 
+  {
+    styles: styles,
+    title: 'Crux',
+    map: true
+  });
 });
 
 app.get('/admin', async (req, res) => {
