@@ -13,6 +13,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
+    position: sticky;
 }
 
 nav ul {
@@ -42,6 +43,5 @@ nav button {
     font-family: Arial;
     font-weight: bold;
     cursor: pointer;
-    margin-left: 100px;
+    margin-left: auto;
 }
-
