@@ -99,48 +99,47 @@
                         <button class = "login-button" id = "login-button">Login</button>
                         <button class = "login-button" id = "create-account-button">Create Account</button>
                     </div>
+                    <div id = "login">
+                        <h1>Login</h1>
+                        <form id="login-form" action="/login" method="post">
+                            <div class="input-group">
+                              <label for="username">Username:</label>
+                              <input type="text" id="username" name="username" required>
+                            </div>
+                            <div class="input-group">
+                              <label for="password">Password:</label>
+                              <input type="password" id="password" name="password" required>
+                            </div>
+                            <div class="input-group">
+                              <button type="submit">Login</button>
+                            </div>
+                          </form>
+                    </div>
+                    <div id = "create-account">
+                        <h1>Create Account</h1>
+                        <form id="create-account-form" action="/create-account" method="post">
+                            <div class="input-group">
+                              <label for="username">Username:</label>
+                              <input type="text" id="username" name="username" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="email">Email:</label>
+                                <input type="text" id="email" name="email" required>
+                              </div>
+                            <div class="input-group">
+                              <label for="password">Password:</label>
+                              <input type="password" id="password" name="password" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="password">Confirm password:</label>
+                                <input type="password" id="password" name="password" required>
+                              </div>
+                            <div class="input-group">
+                              <button type="submit">Create Account</button>
+                            </div>
+                        </form>
+                    </div>
                   <% } %>
-
-                <div id = "login">
-                    <h1>Login</h1>
-                    <form id="login-form" action="/login" method="post">
-                        <div class="input-group">
-                          <label for="username">Username:</label>
-                          <input type="text" id="username" name="username" required>
-                        </div>
-                        <div class="input-group">
-                          <label for="password">Password:</label>
-                          <input type="password" id="password" name="password" required>
-                        </div>
-                        <div class="input-group">
-                          <button type="submit">Login</button>
-                        </div>
-                      </form>
-                </div>
-                <div id = "create-account">
-                    <h1>Create Account</h1>
-                    <form id="create-account-form" action="/create-account" method="post">
-                        <div class="input-group">
-                          <label for="username">Username:</label>
-                          <input type="text" id="username" name="username" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="email">Email:</label>
-                            <input type="text" id="email" name="email" required>
-                          </div>
-                        <div class="input-group">
-                          <label for="password">Password:</label>
-                          <input type="password" id="password" name="password" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="password">Confirm password:</label>
-                            <input type="password" id="password" name="password" required>
-                          </div>
-                        <div class="input-group">
-                          <button type="submit">Create Account</button>
-                        </div>
-                    </form>
-                </div>
             </div>
           </div>
         </div>
