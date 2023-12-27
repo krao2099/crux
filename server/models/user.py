@@ -1,4 +1,7 @@
+import sys
+sys.path.append("../Server")
 import db
+
 class User():
     def __init__(self, id, date, username, email, hash_password):
         self.set_id(id)
@@ -31,12 +34,12 @@ class User():
         except Exception as e: 
             raise e
     
-    def retrieve_hash_password(username):
-        query = """SELECT retrieve_hash_password(%s)"""
-        params = (username,)
-        return db.retrieve(query, params)[0][0]
+def retrieve_hash_password(username):
+    query = """SELECT retrieve_hash_password(%s)"""
+    params = (username,)
+    return db.retrieve(query, params)[0][0]
 
-    def login_success(username):
-        query = """SELECT login_success(%s)"""
-        params = (username,)
-        return db.retrieve(query, params)[0][0]
+def login_success(username):
+    query = """SELECT login_success(%s)"""
+    params = (username,)
+    return db.retrieve(query, params)[0][0]
