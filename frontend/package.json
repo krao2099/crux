@@ -2,8 +2,9 @@
   "name": "frontend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "express_ejs_server.js",
   "scripts": {
+    "start": "node express_ejs_server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
