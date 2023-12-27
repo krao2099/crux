@@ -21,10 +21,11 @@ app.get('/', async (req, res) => {
   }
 
   try {
-    let response = await axios.get('http://127.0.0.1:5000/user_details', {
+    let response = await axios.get('https://127.0.0.1:5000/user_details', {
       withCredentials: true,
     });
     let data = response.data;
+    console.log(data)
     config.logged_in = data.logged_in;
     config.admin = data.admin
   }  catch (error) {

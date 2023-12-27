@@ -127,7 +127,7 @@ function showError(error) {
     }
 }
 
-//Functions handling user log in and log out
+//Functions handling user log in and log out and sign up
 const loginButton = document.getElementById('login-button');
 const loginDiv = document.getElementById('login');
 const createAccountButton = document.getElementById('create-account-button');
@@ -148,5 +148,69 @@ function createAccountClick() {
 
 loginButton.addEventListener('click', loginClick);
 createAccountButton.addEventListener('click', createAccountClick)
+
+function login(event) {
+  event.preventDefault()
+  var formData = {
+    username: document.getElementById("login_username").value,
+    password: document.getElementById("login_username").value
+  };
+  fetch('http://127.0.0.1:5000/login', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    }).then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(responseData => {
+          console.log('Response:', responseData);
+          if (responseData.success) {
+            location.reload;
+          }
+          alert(responseData.error);
+      })
+      .catch(error => {
+          // Handle errors during the fetch
+          console.error('Error:', error);
+      });
+}
+
+function createUser(event) {
+  event.preventDefault()
+  var formData = {
+    username: document.getElementById("create_username").value,
+    email: document.getElementById("create_email").value,
+    password: document.getElementById("create_password").value
+  };
+  fetch('http://127.0.0.1:5000/user', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+      credentials: 'include',
+    }).then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(responseData => {
+          console.log('Response:', responseData);
+          if (responseData.success) {
+            //window.location.reload();
+          }
+          //alert(responseData.error);
+      })
+      .catch(error => {
+          // Handle errors during the fetch
+          console.error('Error:', error);
+      });
+}
 
 getLocation();

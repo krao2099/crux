@@ -89,6 +89,7 @@ class Route():
         except Exception as e: 
             raise e
 
+    @staticmethod
     def publish_route(route_id):
         query = """UPDATE Routes SET published = TRUE WHERE id = %s"""
         params = (route_id)
@@ -96,7 +97,8 @@ class Route():
             db.execute(query, params)
         except Exception as e: 
             raise e
-
+    
+    @staticmethod
     def get_all_routes_per_crag(crag_id):
         query = """SELECT * FROM Routes WHERE crag_id = %s"""
         params = (crag_id)
@@ -104,7 +106,8 @@ class Route():
             return db.retrieve(query, params)
         except Exception as e:
             raise e
-
+    
+    @staticmethod
     def get_all_routes_per_wall(wall_id):
         query = """SELECT * FROM Routes WHERE wall_id = %s"""
         params = (wall_id)
@@ -112,7 +115,8 @@ class Route():
             return db.retrieve(query, params)
         except Exception as e:
             raise e
-
+    
+    @staticmethod
     def get_complete_routes(user_id):
         query = """SELECT * FROM UserRoutes WHERE completed = TRUE AND user_id = %s"""
         params = (user_id)
@@ -120,7 +124,8 @@ class Route():
             return db.retrieve(query, params)
         except Exception as e:
             raise e
-
+    
+    @staticmethod
     def get_uncomplete_routes(user_id):
         query = """SELECT * FROM UserRoutes WHERE completed = FALSE AND user_id = %s"""
         params = (user_id)
@@ -128,7 +133,8 @@ class Route():
             return db.retrieve(query, params)
         except Exception as e:
             raise e
-
+    
+    @staticmethod
     def get_historical(route_id):
         query = """SELECT * FROM RoutesHistorical WHERE route_id = %s ORDER BY version_number DESC"""
         params = (route_id)

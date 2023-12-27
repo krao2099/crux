@@ -28,6 +28,7 @@ class Comment():
     def set_beta(self, beta):
         self.beta = beta
 
+    @staticmethod
     def get_betas(route_id):
         query = """SELECT * FROM RouteComments WHERE route_id = %s AND beta = TRUE"""
         params = (route_id)
@@ -36,6 +37,7 @@ class Comment():
         except Exception as e:
             raise e
 
+    @staticmethod
     def get_comments_wall(wall_id):
         query = """SELECT * FROM RouteComments JOIN Routes ON RouteComments.route_id = Routes.id WHERE wall_id = %s"""
         params = (wall_id)
@@ -44,9 +46,11 @@ class Comment():
         except Exception as e:
             raise e
 
+    @staticmethod
     def get_comments_route(route_id):
         pass
 
+    @staticmethod
     def get_comments_crag(crag_id):
         query = """SELECT * FROM Walls AS W 
         

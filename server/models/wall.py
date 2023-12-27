@@ -67,7 +67,8 @@ class Wall():
             db.execute(query, record)
         except Exception as e: 
             raise e
-
+    
+    @staticmethod
     def publish_wall(wall_id):
         query = """UPDATE Walls SET published = TRUE WHERE id = %s"""
         params = (wall_id)
@@ -75,7 +76,8 @@ class Wall():
             db.execute(query, params)
         except Exception as e: 
             raise e
-
+    
+    @staticmethod
     def get_walls_per_crag(crag_id):
         query = """SELECT * FROM Walls WHERE crag_id = %s"""
         params = (crag_id)
@@ -83,14 +85,16 @@ class Wall():
             db.retrieve(query, params)
         except Exception as e:
             raise e
-
+    
+    @staticmethod
     def get_all_walls():
         query = """SELECT * FROM Walls WHERE published = TRUE"""
         try:
             db.retrieve(query, None)
         except Exception as e:
             raise e
-
+    
+    @staticmethod
     def get_historical(wall_id):
         query = """SELECT * FROM WallsHistorical WHERE wall_id = %s ORDER BY version_number DESC"""
         params = (wall_id)

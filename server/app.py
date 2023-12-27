@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
 from models.user import User
@@ -10,21 +10,21 @@ import os
 
 app = Flask(__name__)
 
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
 #TODO change the env var
-app.config['SECRET_KEY'] = 'feBOBFEO'
 
 setPass()
 
 
 @app.route('/user', methods=['POST'])
 async def create_user():
-    if 'user_id' in session:
-        return jsonify({'Error': 'logged_in_user'}), 200
+    user_cookie = request.cookies.get('user_id')
+    if user_cookie:
+        return jsonify({'success': 'logged_in_user'}), 200
     data = request.json
     if 'username' not in data or 'email' not in data or 'password' not in data:
-        return jsonify({'Error': 'Missing Data !'}), 400
+        return jsonify({'error': 'Missing Data !'}), 400
     new_user = User(
         None,
         None,
@@ -36,25 +36,30 @@ async def create_user():
         new_user.create_user()
     except Exception as e:
         if type(e) is UniqueViolation:
-            return jsonify({'Error': 'Duplicate Username !'}), 400
-        return jsonify({ 'Error' : str(e)}), 500
-    session['user_id'] = new_user.id
-    return jsonify({'Success': 'User created !'}), 200
+            return jsonify({'error': 'Duplicate Username !'}), 400
+        print(str(e))
+        return jsonify({ 'error' : 'Unknown server error'}), 500
+    response = make_response(jsonify({'success': 'User created !'}))
+    response.set_cookie('user_id', str(User.login_success(data['username'])), samesite='None')
+    return response, 200
 
 @app.route('/login', methods=['POST'])
 async def login():
-    if 'user_id' in session:
-        return jsonify({'Success': 'logged_in'}), 200
     data = request.json
+    user_cookie = request.cookies.get('user_id')
+    if user_cookie:
+        return jsonify({'success': 'logged_in'}), 200
     if 'username' not in data or 'password' not in data:
-        return jsonify({'Error': 'Missing Data !'}), 400
+        return jsonify({'error': 'Missing Data !'}), 400
     h_pass = User.retrieve_hash_password(data['username'])
     if h_pass == "lockout" or h_pass == "fail_login":
-        return jsonify({'Error': h_pass}), 200
+        return jsonify({'error': h_pass}), 200
     if check_password_hash(h_pass, data['password']):
-        session['user_id'] = User.login_success(data['username'])
-        return jsonify({'Success': 'logged_in'}), 200
-    return jsonify({'Error': 'fail_login'}), 200
+        response = make_response(jsonify({'success': 'logged_in'}))
+
+        response.set_cookie('user_id', str(User.login_success(data['username'])), samesite='None')
+        return response, 200
+    return jsonify({'error': 'fail_login'}), 200
 
 @app.route('/user_details', methods=['GET'])
 async def user_details():
@@ -62,10 +67,11 @@ async def user_details():
         'logged_in': False,
         'admin': False
     }
-    if not 'user_id' in session:
+    user_cookie = request.cookies.get('user_id')
+    if user_cookie is None:
         return jsonify(response), 200
     response['logged_in'] = True
-    response['admin'] = is_admin(session['user_id'])
+    response['admin'] = is_admin(user_cookie)
     return jsonify(response), 200
 
     

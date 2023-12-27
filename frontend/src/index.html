@@ -101,14 +101,14 @@
                     </div>
                     <div id = "login">
                         <h1>Login</h1>
-                        <form id="login-form" action="/login" method="post">
+                        <form id="login-form" onsubmit="login(event)">
                             <div class="input-group">
                               <label for="username">Username:</label>
-                              <input type="text" id="username" name="username" required>
+                              <input type="text" id="login_username" name="username" required>
                             </div>
                             <div class="input-group">
                               <label for="password">Password:</label>
-                              <input type="password" id="password" name="password" required>
+                              <input type="password" id="login_password" name="password" required>
                             </div>
                             <div class="input-group">
                               <button type="submit">Login</button>
@@ -117,22 +117,22 @@
                     </div>
                     <div id = "create-account">
                         <h1>Create Account</h1>
-                        <form id="create-account-form" action="/create-account" method="post">
+                        <form id="create-account-form" onsubmit="createUser(event)">
                             <div class="input-group">
                               <label for="username">Username:</label>
-                              <input type="text" id="username" name="username" required>
+                              <input type="text" id="create_username" name="username" required>
                             </div>
                             <div class="input-group">
                                 <label for="email">Email:</label>
-                                <input type="text" id="email" name="email" required>
+                                <input type="text" id="create_email" name="email" required>
                               </div>
                             <div class="input-group">
                               <label for="password">Password:</label>
-                              <input type="password" id="password" name="password" required>
+                              <input type="password" id="create_password" name="password" required>
                             </div>
                             <div class="input-group">
                                 <label for="password">Confirm password:</label>
-                                <input type="password" id="password" name="password" required>
+                                <input type="password" id="create_password_confirm" name="password" required>
                               </div>
                             <div class="input-group">
                               <button type="submit">Create Account</button>
