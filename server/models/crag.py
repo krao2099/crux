@@ -45,61 +45,62 @@ class Crag():
         query = """INSERT INTO Crags (name, creation_date, state, coordinates, 
                                         description, image_path, rating, 
                                         user_id) VALUES (%s, %s, %s, %s, 
-                                                                                %s, %s, %s, %s)"""
+                                                        %s, %s, %s, %s) RETURNING id"""
         record = (self.name, self.date, self.state, 
                   self.coordinates, self.description, self.image, 
                   self.rating, self.user)
+        
         try:
-            db.execute(query, record)
+            self.set_id(db.execute(query, record, retrieve=True))
         except Exception as e: 
             raise e
 
-    #Procedure needed, wait
-    def view_crag(user_id, crag_id):
-        pass
-    
-    def publish_crag(user_id, crag_id):
+#Procedure needed, wait
+def view_crag(user_id, crag_id):
+    pass
 
-        if(not crux_utils.is_admin(user_id)):
-            raise PermissionError
-        query = """UPDATE Crags SET published = TRUE WHERE id = %s"""
-        params = (crag_id)
-        try:
-            db.execute(query, params)
-        except Exception as e: 
-            raise e
+def publish_crag(user_id, crag_id):
 
-    def get_all_unpublish_crags():
-        query = """SELECT * FROM Crags WHERE published = FALSE"""
-        try:
-            return db.retrieve(query, None)
-        except Exception as e:
-            raise e
+    if(not crux_utils.is_admin(user_id)):
+        raise PermissionError("admin privelages required for publishing")
+    query = """UPDATE Crags SET published = TRUE WHERE id = %s"""
+    params = (crag_id,)
+    try:
+        db.execute(query, params)
+    except Exception as e: 
+        raise e
 
-    def get_my_unpublish_crags(user_id):
-        query = """SELECT * FROM Crags WHERE published = FALSE AND user_id = %s"""
-        params = (user_id)
-        try:
-            return db.retrieve(query, params)
-        except Exception as e:
-            raise e
+def get_all_unpublish_crags():
+    query = """SELECT * FROM Crags WHERE published = FALSE"""
+    try:
+        return db.retrieve(query, None)
+    except Exception as e:
+        raise e
 
-    #wait on this one
-    def get_all_crags__by_pins():
-        pass
+def get_my_unpublish_crags(user_id):
+    query = """SELECT * FROM Crags WHERE published = FALSE AND user_id = %s"""
+    params = (user_id)
+    try:
+        return db.retrieve(query, params)
+    except Exception as e:
+        raise e
 
-    def get_crags_by_state(state):
-        query = """SELECT * FROM Crags WHERE published = TRUE AND state = %s"""
-        params = (state)
-        try:
-            return db.retrieve(query, params)
-        except Exception as e:
-            raise e
+#wait on this one
+def get_all_crags__by_pins():
+    pass
 
-    def get_historical(crag_id):
-        query = """SELECT * FROM CragsHistorical WHERE crag_id = %s ORDER BY version_number DESC"""
-        params = (crag_id)
-        try:
-            return db.retrieve(query, params)
-        except Exception as e:
-            raise e
+def get_crags_by_state(state):
+    query = """SELECT * FROM Crags WHERE published = TRUE AND state = %s"""
+    params = (state)
+    try:
+        return db.retrieve(query, params)
+    except Exception as e:
+        raise e
+
+def get_historical(crag_id):
+    query = """SELECT * FROM CragsHistorical WHERE crag_id = %s ORDER BY version_number DESC"""
+    params = (crag_id)
+    try:
+        return db.retrieve(query, params)
+    except Exception as e:
+        raise e

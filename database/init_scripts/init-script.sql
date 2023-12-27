@@ -228,6 +228,8 @@ CREATE FUNCTION archive_climbing_area() RETURNS TRIGGER AS $$
                                                 OLD.published,
                                                 OLD.name   
                                             );
+
+        RETURN NEW;
     END;
 $$ LANGUAGE plpgsql;
 
@@ -271,6 +273,8 @@ CREATE FUNCTION archive_wall() RETURNS TRIGGER AS $$
                                         OLD.boulder,
                                         OLD.directions
                                     );
+        RETURN NEW;
+
     END;
 $$ LANGUAGE plpgsql;
 
@@ -312,6 +316,7 @@ CREATE FUNCTION archive_route() RETURNS TRIGGER AS $$
                                         OLD.name,
                                         OLD.coordinates
                                     );
+        RETURN NEW;
     END;
 $$ LANGUAGE plpgsql;
 

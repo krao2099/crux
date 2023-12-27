@@ -24,6 +24,7 @@ def select_test_user():
     query = "SELECT * FROM Users WHERE username = 'testUser';"
 
     return db.retrieve(query, None)
+
 def test_create_user(setup_data):
     result = select_test_user()
 
