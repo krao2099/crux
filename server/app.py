@@ -56,11 +56,17 @@ async def login():
         return jsonify({'Success': 'logged_in'}), 200
     return jsonify({'Error': 'fail_login'}), 200
 
-@app.route('/check_admin', methods=['GET'])
-async def isAdmin():
+@app.route('/user_details', methods=['GET'])
+async def user_details():
+    response = {
+        'logged_in': False,
+        'admin': False
+    }
     if not 'user_id' in session:
-        return jsonify({'Admin': False}), 200
-    return jsonify({'Admin': is_admin(session['user_id'])}), 200
+        return jsonify(response), 200
+    response['logged_in'] = True
+    response['admin'] = is_admin(session['user_id'])
+    return jsonify(response), 200
 
     
 
