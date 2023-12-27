@@ -10,6 +10,9 @@ app.engine('.html', require('ejs').__express);
 
 app.use('/src', express.static(path.join(__dirname, '/src')));
 
+app.use(express.static('public'));
+app.use('/img', express.static('img'));
+
 app.get('/', async (req, res) => {
 
   let config = {

@@ -127,4 +127,26 @@ function showError(error) {
     }
 }
 
+//Functions handling user log in and log out
+const loginButton = document.getElementById('login-button');
+const loginDiv = document.getElementById('login');
+const createAccountButton = document.getElementById('create-account-button');
+const createAccountDiv = document.getElementById('create-account');
+
+function loginClick() {
+    console.log("click");
+    loginDiv.style.display = 'flex';
+    createAccountDiv.style.display = 'none';
+
+}
+
+function createAccountClick() {
+    console.log("click");
+    loginDiv.style.display = 'none';
+    createAccountDiv.style.display = 'flex';
+}
+
+loginButton.addEventListener('click', loginClick);
+createAccountButton.addEventListener('click', createAccountClick)
+
 getLocation();
