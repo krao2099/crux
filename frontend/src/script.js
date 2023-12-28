@@ -145,9 +145,12 @@ function createAccountClick() {
     loginDiv.style.display = 'none';
     createAccountDiv.style.display = 'flex';
 }
-
-loginButton.addEventListener('click', loginClick);
-createAccountButton.addEventListener('click', createAccountClick)
+if (loginButton) {
+  loginButton.addEventListener('click', loginClick);
+}
+if (createAccountButton) {
+  createAccountButton.addEventListener('click', createAccountClick)
+}
 
 function login(event) {
   event.preventDefault()
@@ -155,7 +158,7 @@ function login(event) {
     username: document.getElementById("login_username").value,
     password: document.getElementById("login_username").value
   };
-  fetch('http://127.0.0.1:5000/login', {
+  fetch('http://localhost/login', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -170,7 +173,7 @@ function login(event) {
       .then(responseData => {
           console.log('Response:', responseData);
           if (responseData.success) {
-            location.reload;
+            window.location.reload();
           }
           alert(responseData.error);
       })
@@ -187,7 +190,7 @@ function createUser(event) {
     email: document.getElementById("create_email").value,
     password: document.getElementById("create_password").value
   };
-  fetch('http://127.0.0.1:5000/user', {
+  fetch('http://localhost/user', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -203,7 +206,29 @@ function createUser(event) {
       .then(responseData => {
           console.log('Response:', responseData);
           if (responseData.success) {
-            //window.location.reload();
+            window.location.reload();
+          }
+          //alert(responseData.error);
+      })
+      .catch(error => {
+          // Handle errors during the fetch
+          console.error('Error:', error);
+      });
+}
+
+function logout() {
+  fetch('http://localhost/logout', {
+      method: 'POST',
+      credentials: 'include',
+    }).then(response => {
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+      })
+      .then(responseData => {
+          if (responseData.success) {
+            window.location.reload();
           }
           //alert(responseData.error);
       })

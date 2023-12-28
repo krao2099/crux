@@ -1,10 +1,12 @@
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
 app.engine('.html', require('ejs').__express);
+app.use(cookieParser());
 
 
 
@@ -19,10 +21,15 @@ app.get('/', async (req, res) => {
     logged_in: false,
     admin: false
   }
-
+  let user_data = {
+    user_id: req.cookies.user_id
+  }
   try {
-    let response = await axios.get('https://127.0.0.1:5000/user_details', {
-      withCredentials: true,
+    let response = await axios.get('http://server:5000/user_details', {
+      params: user_data,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     let data = response.data;
     console.log(data)

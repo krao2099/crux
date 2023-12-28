@@ -10,9 +10,6 @@ import os
 
 app = Flask(__name__)
 
-CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
-
-#TODO change the env var
 
 setPass()
 
@@ -40,7 +37,7 @@ async def create_user():
         print(str(e))
         return jsonify({ 'error' : 'Unknown server error'}), 500
     response = make_response(jsonify({'success': 'User created !'}))
-    response.set_cookie('user_id', str(User.login_success(data['username'])), samesite='None')
+    response.set_cookie('user_id', str(User.login_success(data['username'])))
     return response, 200
 
 @app.route('/login', methods=['POST'])
@@ -56,8 +53,8 @@ async def login():
         return jsonify({'error': h_pass}), 200
     if check_password_hash(h_pass, data['password']):
         response = make_response(jsonify({'success': 'logged_in'}))
-
-        response.set_cookie('user_id', str(User.login_success(data['username'])), samesite='None')
+        #TODO add encryption
+        response.set_cookie('user_id', str(User.login_success(data['username'])))
         return response, 200
     return jsonify({'error': 'fail_login'}), 200
 
@@ -67,21 +64,24 @@ async def user_details():
         'logged_in': False,
         'admin': False
     }
-    user_cookie = request.cookies.get('user_id')
-    if user_cookie is None:
+    user_id = request.args.get('user_id')
+    if user_id is None:
         return jsonify(response), 200
+    #TODO add valid auth that return id and username
     response['logged_in'] = True
-    response['admin'] = is_admin(user_cookie)
+    response['admin'] = is_admin(user_id)
     return jsonify(response), 200
 
     
 
 @app.route('/logout', methods=['POST'])
 async def logout():
-    if not 'user_id' in session:
-        return jsonify({'Error': 'No User Data'}), 200
-    session.pop('user_id', default=None)
-    return jsonify({'Success': 'logged_out'}), 200
+    user_cookie = request.cookies.get('user_id')
+    if not user_cookie:
+        return jsonify({'error': 'No User Data'}), 200
+    response = make_response(jsonify({'success': 'logged_out'}))
+    response.delete_cookie('user_id')
+    return response, 200
 
 @app.route('/crag', methods=['POST'])
 def create_crag():
