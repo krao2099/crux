@@ -64,8 +64,8 @@ async def user_details():
         'logged_in': False,
         'admin': False
     }
-    user_id = request.args.get('user_id')
-    if user_id is None:
+    user_id = request.cookies.get('user_id')
+    if user_id == 'null':
         return jsonify(response), 200
     #TODO add valid auth that return id and username
     response['logged_in'] = True

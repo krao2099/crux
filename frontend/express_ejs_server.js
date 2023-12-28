@@ -21,14 +21,12 @@ app.get('/', async (req, res) => {
     logged_in: false,
     admin: false
   }
-  let user_data = {
-    user_id: req.cookies.user_id
-  }
+  let user_id = req.cookies.user_id || null
   try {
     let response = await axios.get('http://server:5000/user_details', {
-      params: user_data,
       headers: {
         'Content-Type': 'application/json',
+        'Cookie': `user_id=${user_id}`,
       },
     });
     let data = response.data;
