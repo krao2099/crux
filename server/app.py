@@ -12,6 +12,10 @@ app = Flask(__name__)
 
 setPass()
 
+def set_cookie_response(response, username):
+    response = make_response(response)
+    response.set_cookie('user_id', str(User.login_success(username)), httponly=True, samesite='lax')
+    return response
 
 @app.route('/user', methods=['POST'])
 async def create_user():
@@ -35,8 +39,7 @@ async def create_user():
             return jsonify({'error': 'Duplicate Username !'}), 400
         print(str(e))
         return jsonify({ 'error' : 'Unknown server error'}), 500
-    response = make_response(jsonify({'success': 'User created !'}))
-    response.set_cookie('user_id', str(User.login_success(data['username'])), httponly=True)
+    response = set_cookie_response(jsonify({'success': 'User created !'}), data['username'])
     return response, 200
 
 @app.route('/login', methods=['POST'])
@@ -51,9 +54,7 @@ async def login():
     if h_pass == "lockout" or h_pass == "fail_login":
         return jsonify({'error': h_pass}), 200
     if check_password_hash(h_pass, data['password']):
-        response = make_response(jsonify({'success': 'logged_in'}))
-        #TODO add encryption
-        response.set_cookie('user_id', str(User.login_success(data['username'])), httponly=True)
+        response = set_cookie_response(jsonify({'success': 'logged_in'}), data['username'])
         return response, 200
     return jsonify({'error': 'fail_login'}), 200
 

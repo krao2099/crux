@@ -173,8 +173,9 @@ function login(event) {
       .then(responseData => {
           if (responseData.success) {
             window.location.reload();
+          } else {
+            alert(responseData.error);
           }
-          alert(responseData.error);
       })
       .catch(error => {
           // Handle errors during the fetch
