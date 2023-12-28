@@ -55,6 +55,7 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/proxy_settings.conf:/etc/nginx/proxy_settings.conf
     depends_on:
       - web
       - server

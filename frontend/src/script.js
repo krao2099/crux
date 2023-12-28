@@ -158,7 +158,7 @@ function login(event) {
     username: document.getElementById("login_username").value,
     password: document.getElementById("login_username").value
   };
-  fetch('http://localhost/login', {
+  fetch('http://localhost/api/login', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -171,7 +171,6 @@ function login(event) {
           return response.json();
       })
       .then(responseData => {
-          console.log('Response:', responseData);
           if (responseData.success) {
             window.location.reload();
           }
@@ -190,7 +189,7 @@ function createUser(event) {
     email: document.getElementById("create_email").value,
     password: document.getElementById("create_password").value
   };
-  fetch('http://localhost/user', {
+  fetch('http://localhost/api/user', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
@@ -217,7 +216,7 @@ function createUser(event) {
 }
 
 function logout() {
-  fetch('http://localhost/logout', {
+  fetch('http://localhost/api/logout', {
       method: 'POST',
       credentials: 'include',
     }).then(response => {
