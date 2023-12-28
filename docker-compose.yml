@@ -21,10 +21,16 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./server
+    restart: always
     volumes:
       - ./server:/src
     secrets:
       - db-password
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:5000/test"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     depends_on:
       db:
         condition: service_healthy
@@ -34,8 +40,14 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./frontend
+    restart: always
     volumes:
       - ./frontend:/app
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   nginx:
     image: nginx
@@ -46,6 +58,7 @@ services:
     depends_on:
       - web
       - server
+      
 secrets:
   db-password:
     file: database/db_pass.txt
