@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, make_response
-from flask_cors import CORS
 from werkzeug.security import check_password_hash, generate_password_hash
 from models.user import User
 from models.crag import Crag
@@ -37,7 +36,7 @@ async def create_user():
         print(str(e))
         return jsonify({ 'error' : 'Unknown server error'}), 500
     response = make_response(jsonify({'success': 'User created !'}))
-    response.set_cookie('user_id', str(User.login_success(data['username'])))
+    response.set_cookie('user_id', str(User.login_success(data['username'])), httponly=True)
     return response, 200
 
 @app.route('/login', methods=['POST'])
@@ -54,7 +53,7 @@ async def login():
     if check_password_hash(h_pass, data['password']):
         response = make_response(jsonify({'success': 'logged_in'}))
         #TODO add encryption
-        response.set_cookie('user_id', str(User.login_success(data['username'])))
+        response.set_cookie('user_id', str(User.login_success(data['username'])), httponly=True)
         return response, 200
     return jsonify({'error': 'fail_login'}), 200
 
