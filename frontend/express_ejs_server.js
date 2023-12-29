@@ -10,10 +10,10 @@ app.use(cookieParser());
 
 
 
-app.use('/src', express.static(path.join(__dirname, '/src')));
+app.use('/src', express.static('src'));
 
-app.use(express.static('public'));
 app.use('/img', express.static('img'));
+app.use('/leaflet', express.static('node_modules/leaflet/dist'));
 
 app.get('/', async (req, res) => {
 
