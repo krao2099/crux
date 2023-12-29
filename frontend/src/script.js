@@ -1,3 +1,54 @@
+const BASE_URL = "http://localhost/api/";
+const MIN_USERNAME_LENGTH = 2
+const MAX_USERNAME_LENGTH = 50
+const USERNAME_REGEX = /^[a-zA-Z0-9]*$/;
+
+/**
+ * Abstract post to server
+ * @param {*} route route to call
+ * @param {*} payload json payload
+ * @returns 
+ */
+async function post_crux_server_call(route, payload) {
+  var response;
+  try {
+    response = await fetch(BASE_URL + route, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: payload,
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      var data = await response.json();
+      return data;
+  } catch(error) {
+    console.error(error);
+    return {
+        error: 'Encountered unknown error'
+    }
+  }
+}
+
+/**
+ * Reuseable throttle code
+ * @param {*} function to throttle 
+ * @param {*} delay delay to wait
+ * @returns timeout
+ */
+function debounce(func, delay = 1000) {
+  let timeout;
+
+  return (...args) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      func(...args)
+    }, delay)
+  }
+}
+
 // config map
 let config = {
     minZoom: 7,
@@ -18,7 +69,10 @@ let config = {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
-  
+//Config map
+
+//Side nav
+
   // --------------------------------------------------
   // sidebar
   
@@ -89,7 +143,88 @@ let config = {
     element.classList.remove("active-item");
     activeContent.classList.remove("active-content");
   }
+//Side nav bar
 
+  
+//Functions handling user log in and log out and sign up
+  const loginButton = document.getElementById('login-button');
+  const loginDiv = document.getElementById('login');
+  const createAccountButton = document.getElementById('create-account-button');
+  const createAccountDiv = document.getElementById('create-account');
+  
+  function loginClick() {
+    console.log("click");
+    loginDiv.style.display = 'flex';
+    createAccountDiv.style.display = 'none';
+    
+  }
+  
+  function createAccountClick() {
+    console.log("click");
+    loginDiv.style.display = 'none';
+    createAccountDiv.style.display = 'flex';
+  }
+
+  if (loginButton) {
+    loginButton.addEventListener('click', loginClick);
+  }
+
+  const checkUsernameError = debounce(text => {
+    if (text.length < MIN_USERNAME_LENGTH || text.length > MAX_USERNAME_LENGTH) {
+      console.log("Invalid username length, must be between 2 and 50 characters");
+    }
+    if (!USERNAME_REGEX.test(text)) {
+      console.log("Invalid username length, must only contain letters or numbers");
+    }
+  })
+
+  if (createAccountButton) {
+    createAccountButton.addEventListener('click', createAccountClick);
+    document.getElementById("create_username").addEventListener("input", e => {
+      checkUsernameError(e.target.value);
+    })
+  }
+  
+  async function login(event) {
+    event.preventDefault()
+    let formData = {
+      username: document.getElementById("login_username").value,
+      password: document.getElementById("login_password").value
+    };
+    let response = await post_crux_server_call("login", JSON.stringify(formData))
+    if (response.success) {
+      window.location.reload();
+    } else {
+      alert(response.error);
+    }
+  }
+  
+  async function createUser(event) {
+    event.preventDefault()
+    var formData = {
+      username: document.getElementById("create_username").value,
+      email: document.getElementById("create_email").value,
+      password: document.getElementById("create_password").value
+    };
+    let response = await post_crux_server_call("user", JSON.stringify(formData))
+    if (response.success) {
+      window.location.reload();
+    } else {
+      alert(response.error);
+    }
+  }
+  
+  async function logout() {
+    let response = await post_crux_server_call("logout", null);
+  if (response.success) {
+    window.location.reload();
+  } else {
+    alert(response.error);
+  }
+}
+//End of login code
+
+//Geolocation code
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
@@ -126,116 +261,5 @@ function showError(error) {
             break;
     }
 }
-
-//Functions handling user log in and log out and sign up
-const loginButton = document.getElementById('login-button');
-const loginDiv = document.getElementById('login');
-const createAccountButton = document.getElementById('create-account-button');
-const createAccountDiv = document.getElementById('create-account');
-
-function loginClick() {
-    console.log("click");
-    loginDiv.style.display = 'flex';
-    createAccountDiv.style.display = 'none';
-
-}
-
-function createAccountClick() {
-    console.log("click");
-    loginDiv.style.display = 'none';
-    createAccountDiv.style.display = 'flex';
-}
-if (loginButton) {
-  loginButton.addEventListener('click', loginClick);
-}
-if (createAccountButton) {
-  createAccountButton.addEventListener('click', createAccountClick)
-}
-
-function login(event) {
-  event.preventDefault()
-  var formData = {
-    username: document.getElementById("login_username").value,
-    password: document.getElementById("login_username").value
-  };
-  fetch('http://localhost/api/login', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    }).then(response => {
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(responseData => {
-          if (responseData.success) {
-            window.location.reload();
-          } else {
-            alert(responseData.error);
-          }
-      })
-      .catch(error => {
-          // Handle errors during the fetch
-          console.error('Error:', error);
-      });
-}
-
-function createUser(event) {
-  event.preventDefault()
-  var formData = {
-    username: document.getElementById("create_username").value,
-    email: document.getElementById("create_email").value,
-    password: document.getElementById("create_password").value
-  };
-  fetch('http://localhost/api/user', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-      credentials: 'include',
-    }).then(response => {
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(responseData => {
-          console.log('Response:', responseData);
-          if (responseData.success) {
-            window.location.reload();
-          }
-          //alert(responseData.error);
-      })
-      .catch(error => {
-          // Handle errors during the fetch
-          console.error('Error:', error);
-      });
-}
-
-function logout() {
-  fetch('http://localhost/api/logout', {
-      method: 'POST',
-      credentials: 'include',
-    }).then(response => {
-          if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(responseData => {
-          if (responseData.success) {
-            window.location.reload();
-          }
-          //alert(responseData.error);
-      })
-      .catch(error => {
-          // Handle errors during the fetch
-          console.error('Error:', error);
-      });
-}
-
 getLocation();
+//End of geolocation code
