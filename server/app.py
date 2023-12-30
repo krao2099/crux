@@ -14,7 +14,8 @@ setPass()
 
 def set_cookie_response(response, username):
     response = make_response(response)
-    response.set_cookie('user_id', str(User.login_success(username)), httponly=True, samesite='lax')
+    user_id_username_union = str(User.login_success(username)) + ":" + username
+    response.set_cookie('user_id', user_id_username_union, httponly=True, samesite='lax')
     return response
 
 @app.route('/user', methods=['POST'])
@@ -47,6 +48,7 @@ async def login():
     data = request.json
     user_cookie = request.cookies.get('user_id')
     if user_cookie:
+        #TODO validation
         return jsonify({'success': 'logged_in'}), 200
     if 'username' not in data or 'password' not in data:
         return jsonify({'error': 'Missing Data !'}), 400
@@ -62,14 +64,17 @@ async def login():
 async def user_details():
     response = {
         'logged_in': False,
-        'admin': False
+        'admin': False,
+        'username': ''
     }
-    user_id = request.cookies.get('user_id')
-    if user_id == 'null':
+    user_cookie = request.cookies.get('user_id')
+    if user_cookie == 'null':
         return jsonify(response), 200
+    user_cookie = user_cookie.split(":")
     #TODO add valid auth that return id and username
     response['logged_in'] = True
-    response['admin'] = is_admin(user_id)
+    response['admin'] = is_admin(user_cookie[0])
+    response['username'] = user_cookie[1]
     return jsonify(response), 200
 
     

@@ -19,7 +19,8 @@ app.get('/', async (req, res) => {
 
   let config = {
     logged_in: false,
-    admin: false
+    admin: false,
+    username: "",
   }
   let user_id = req.cookies.user_id || null
   try {
@@ -32,7 +33,8 @@ app.get('/', async (req, res) => {
     let data = response.data;
     console.log(data)
     config.logged_in = data.logged_in;
-    config.admin = data.admin
+    config.admin = data.admin;
+    config.username = data.username;
   }  catch (error) {
     console.error('Error making request:', error);
     //res.redirect('/error'); FOR DEVELOPMENT COMMENT THIS OUT

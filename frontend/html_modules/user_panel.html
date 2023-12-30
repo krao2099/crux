@@ -5,7 +5,7 @@
           <div class = "centered"><img id = "profile-picture" src="img/profile.webp"></img></div>
           <div>
               <% if (logged_in) { %>
-                  <h1 class="username">username</h1>
+                  <h1 class="username"><%= username %></h1>
                 <% } else { %>
                   <h1 class="username">guest</h1>
                 <% } %>
