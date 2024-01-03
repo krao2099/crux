@@ -170,60 +170,70 @@ let config = {
     loginButton.addEventListener('click', loginClick);
   }
 
-  const checkUsernameError = debounce(text => {
+  function checkUsernameError(text) {
     var error = document.getElementById("username-error");
     if (text.length < MIN_USERNAME_LENGTH || text.length > MAX_USERNAME_LENGTH) {
         error.innerHTML = "Invalid username length, must be between 2 and 50 characters";
+        return true;
     } else if (!USERNAME_REGEX.test(text)) {
         error.innerHTML = "Invalid username, must only contain letters or numbers";
+        return true;
     } else {
         error.innerHTML = "";
+        return false;
     }
-  })
+  }
 
-  const checkEmailError = debounce(text => {
+  function checkEmailError(text){
     var error = document.getElementById("email-error");
     if (!EMAIL_REGEX.test(text)) {
         error.innerHTML = "Invalid email";
+        return true;
     } else {
         error.innerHTML = "";
+        return false;
     }
-  })
+  }
 
-  const checkPasswordError = debounce(text => {
+  function checkPasswordError(text) {
     var error = document.getElementById("password-error");
     if (text.length < MIN_PASSWORD_LENGTH) {
         error.innerHTML = "Invalid password length, must be greater than 8 characters";
+        return true;
     } else if (!PASSWORD_REGEX.test(text)) {
-        error.innerHTML = "Invalid password, must contain at least one digit, one uppercase letter, and one special character";
+        error.innerHTML = "Invalid password, must contain at least one letter, digit, and special character";
+        return true;
     } else {
         error.innerHTML = "";
+        return false;
     }
-  })
+  }
 
-  const checkConfirmPasswordError = debounce(text => {
+  function checkConfirmPasswordError(text) {
     var error = document.getElementById("confirm-password-error");
     var password = document.getElementById("create_password").value;
     if (text != password) {
         error.innerHTML = "Passwords do not match";
+        return true;
     } else {
         error.innerHTML = "";
+        return false;
     }
-  })
+}
 
   if (createAccountButton) {
     createAccountButton.addEventListener('click', createAccountClick);
     document.getElementById("create_username").addEventListener("input", e => {
-        checkUsernameError(e.target.value);
+        debounce(text => checkUsernameError(text))(e.target.value);
     })
     document.getElementById("create_email").addEventListener("input", e => {
-        checkEmailError(e.target.value);
+        debounce(text => checkEmailError(text))(e.target.value);
     })
     document.getElementById("create_password").addEventListener("input", e => {
-        checkPasswordError(e.target.value);
+        debounce(text => checkPasswordError(text))(e.target.value);
     })
     document.getElementById("create_password_confirm").addEventListener("input", e => {
-        checkConfirmPasswordError(e.target.value);
+        debounce(text => checkConfirmPasswordError(text))(e.target.value);
     })
   }
   
@@ -248,11 +258,22 @@ let config = {
       email: document.getElementById("create_email").value,
       password: document.getElementById("create_password").value
     };
-    let response = await post_crux_server_call("user", JSON.stringify(formData))
-    if (response.success) {
-      window.location.reload();
+
+    var confirmPassword = document.getElementById("create_password_confirm").value;
+
+    if(!checkUsernameError(formData.username) 
+        && !checkEmailError(formData.email) 
+        && !checkPasswordError(formData.password) 
+        && !checkConfirmPasswordError(confirmPassword)){
+        
+        let response = await post_crux_server_call("user", JSON.stringify(formData))
+        if (response.success) {
+            window.location.reload();
+        } else {
+            alert(response.error);
+        }
     } else {
-      alert(response.error);
+        document.getElementById("submit-error").innerHTML = "Error submitting form, please check all fields";
     }
   }
   
