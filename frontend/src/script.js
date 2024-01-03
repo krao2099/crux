@@ -1,7 +1,10 @@
 const BASE_URL = "http://localhost/api/";
 const MIN_USERNAME_LENGTH = 2
 const MAX_USERNAME_LENGTH = 50
+const MIN_PASSWORD_LENGTH = 8
 const USERNAME_REGEX = /^[a-zA-Z0-9]*$/;
+const EMAIL_REGEX = /^\S+@\S+\.\S+$/;
+const PASSWORD_REGEX = /^^(?=.*[a-z])(?=.*[0-9])(?=.*\W).*$/;
 
 /**
  * Abstract post to server
@@ -153,14 +156,12 @@ let config = {
   const createAccountDiv = document.getElementById('create-account');
   
   function loginClick() {
-    console.log("click");
     loginDiv.style.display = 'flex';
     createAccountDiv.style.display = 'none';
     
   }
   
   function createAccountClick() {
-    console.log("click");
     loginDiv.style.display = 'none';
     createAccountDiv.style.display = 'flex';
   }
@@ -170,18 +171,59 @@ let config = {
   }
 
   const checkUsernameError = debounce(text => {
+    var error = document.getElementById("username-error");
     if (text.length < MIN_USERNAME_LENGTH || text.length > MAX_USERNAME_LENGTH) {
-      console.log("Invalid username length, must be between 2 and 50 characters");
+        error.innerHTML = "Invalid username length, must be between 2 and 50 characters";
+    } else if (!USERNAME_REGEX.test(text)) {
+        error.innerHTML = "Invalid username, must only contain letters or numbers";
+    } else {
+        error.innerHTML = "";
     }
-    if (!USERNAME_REGEX.test(text)) {
-      console.log("Invalid username length, must only contain letters or numbers");
+  })
+
+  const checkEmailError = debounce(text => {
+    var error = document.getElementById("email-error");
+    if (!EMAIL_REGEX.test(text)) {
+        error.innerHTML = "Invalid email";
+    } else {
+        error.innerHTML = "";
+    }
+  })
+
+  const checkPasswordError = debounce(text => {
+    var error = document.getElementById("password-error");
+    if (text.length < MIN_PASSWORD_LENGTH) {
+        error.innerHTML = "Invalid password length, must be greater than 8 characters";
+    } else if (!PASSWORD_REGEX.test(text)) {
+        error.innerHTML = "Invalid password, must contain at least one digit, one uppercase letter, and one special character";
+    } else {
+        error.innerHTML = "";
+    }
+  })
+
+  const checkConfirmPasswordError = debounce(text => {
+    var error = document.getElementById("confirm-password-error");
+    var password = document.getElementById("create_password").value;
+    if (text != password) {
+        error.innerHTML = "Passwords do not match";
+    } else {
+        error.innerHTML = "";
     }
   })
 
   if (createAccountButton) {
     createAccountButton.addEventListener('click', createAccountClick);
     document.getElementById("create_username").addEventListener("input", e => {
-      checkUsernameError(e.target.value);
+        checkUsernameError(e.target.value);
+    })
+    document.getElementById("create_email").addEventListener("input", e => {
+        checkEmailError(e.target.value);
+    })
+    document.getElementById("create_password").addEventListener("input", e => {
+        checkPasswordError(e.target.value);
+    })
+    document.getElementById("create_password_confirm").addEventListener("input", e => {
+        checkConfirmPasswordError(e.target.value);
     })
   }
   

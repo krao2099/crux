@@ -216,6 +216,11 @@ svg:not(:root) {
   display: block;
 }
 
+.error-message {
+    color: red;
+    font-size: 14px;
+}
+
 /* Profile sidebar (login, create account, logout) */
 .username {
     text-align: center
