@@ -6,6 +6,7 @@ from db import setPass
 from psycopg2.errors import UniqueViolation
 from crux_utils import is_admin
 import os
+import html
 
 app = Flask(__name__)
 
@@ -29,7 +30,7 @@ async def create_user():
         new_user = User(
         None,
         None,
-        data['username'],
+        html.escape(data['username']),
         data['email'],
         data['password']
         )
