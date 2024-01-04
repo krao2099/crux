@@ -1,8 +1,15 @@
 import sys
 sys.path.append("../Server")
 import db
+import re
+from werkzeug.security import generate_password_hash
+
+USERNAME_REGEX = r'^[a-zA-Z0-9]*$'
+EMAIL_REGEX = r'^\S+@\S+\.\S+$'
+PASSWORD_REGEX = r'^^(?=.*[a-z])(?=.*[0-9])(?=.*\W).*$'
 
 class User():
+
     def __init__(self, id, date, username, email, hash_password):
         self.set_id(id)
         self.set_date(date)
@@ -17,13 +24,22 @@ class User():
         self.date = date
 
     def set_username(self, username):
-        self.username = username
+        if re.match(USERNAME_REGEX, username):
+            self.username = username
+        else:
+            raise ValueError("Invalid Username pattern")
 
     def set_email(self, email):
-        self.email = email
+        if re.match(EMAIL_REGEX, email):
+            self.email = email
+        else:
+            raise ValueError("Invalid email pattern")
 
-    def set_hash_password(self, hash_password):
-        self.hash_password = hash_password
+    def set_hash_password(self, password):
+        if re.match(PASSWORD_REGEX, password):
+            self.hash_password = generate_password_hash(password)
+        else:
+            raise ValueError("Invalid password pattern")
 
 
     def create_user(self):

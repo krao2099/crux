@@ -36,8 +36,8 @@ async function post_crux_server_call(route, payload) {
 }
 
 /**
- * Reuseable throttle code
- * @param {*} function to throttle 
+ * Reuseable debounce code
+ * @param {*} function to debounce 
  * @param {*} delay delay to wait
  * @returns timeout
  */

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, make_response
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 from models.user import User
 from models.crag import Crag
 from db import setPass
@@ -8,7 +8,6 @@ from crux_utils import is_admin
 import os
 
 app = Flask(__name__)
-
 
 setPass()
 
@@ -26,20 +25,19 @@ async def create_user():
     data = request.json
     if 'username' not in data or 'email' not in data or 'password' not in data:
         return jsonify({'error': 'Missing Data !'}), 400
-    new_user = User(
+    try:
+        new_user = User(
         None,
         None,
         data['username'],
         data['email'],
-        generate_password_hash(data['password'])
-    )
-    try:
+        data['password']
+        )
         new_user.create_user()
     except Exception as e:
         if type(e) is UniqueViolation:
             return jsonify({'error': 'Duplicate Username !'}), 400
-        print(str(e))
-        return jsonify({ 'error' : 'Unknown server error'}), 500
+        return jsonify({ 'error' : str(e)}), 500
     response = set_cookie_response(jsonify({'success': 'User created !'}), data['username'])
     return response, 200
 
